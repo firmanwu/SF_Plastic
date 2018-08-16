@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Formulas extends CI_Controller {
+class Materials_formulas extends CI_Controller {
 
 	public function __construct()
 	{
@@ -14,20 +14,21 @@ class Formulas extends CI_Controller {
 
 	public function _example_output($output = null)
 	{
-		$this->load->view('formulas.php',(array)$output);
+		$this->load->view('materials_formulas.php',(array)$output);
 	}
 
-	public function formulas_management()
+	public function materials_formulas_management()
 	{
 		try{
                         $crud = new grocery_CRUD();
 
                         $crud->set_theme('bootstrap-v4');
 						//$crud->set_table('recipe');
-						$crud->set_table('formula');
-						$crud->set_subject('Formula');
-						//$crud->set_relation('ingredient_id', "recipe_ingredient",'label');
-						//$crud->set_relation('recipe_id', "recipe",'name');
+						$crud->set_table('formula_material');
+						$crud->set_subject('Material/Formula');
+						$crud->unset_fields('unit_id');
+						$crud->set_relation('material_id', "material",'label');
+						$crud->set_relation('formula_id', "formula",'name');
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
 
 						$output = $crud->render();

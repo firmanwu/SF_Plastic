@@ -9,11 +9,11 @@ foreach($css_files as $file): ?>
 <?php endforeach; ?>
 </head>
 <body>
-	<nav class="nav nav-pills" data-spy="affix" data-offset-top="205">
-		<a class="nav-link active" href='<?php echo site_url('formulas/formulas_management')?>'>Formulas</a> 
-		<a class="nav-link" href='<?php echo site_url('materials_formulas/materials_formulas_management')?>'>Materials/Formulas</a> 
-		<a class="nav-link" href='<?php echo site_url('materials/materials_management')?>'>Materials</a> 
-	</nav>
+	<div>
+		<a href='<?php echo site_url('recipes/recipes_management')?>'>Recipes</a> |
+		<a href='<?php echo site_url('ingredients_recipes/ingredients_recipes_management')?>'>Ingredients/Recipes</a> |
+		<a href='<?php echo site_url('ingredients/ingredients_management')?>'>Ingredients</a> 
+	</div>
 	<div style='height:20px;'></div>  
     <div style="padding: 10px">
 		<?php echo $output; ?>

@@ -10,8 +10,8 @@ foreach($css_files as $file): ?>
 </head>
 <body>
 	<nav class="nav nav-pills" data-spy="affix" data-offset-top="205">
-		<a class="nav-link active" href='<?php echo site_url('formulas/formulas_management')?>'>Formulas</a> 
-		<a class="nav-link" href='<?php echo site_url('materials_formulas/materials_formulas_management')?>'>Materials/Formulas</a> 
+		<a class="nav-link" href='<?php echo site_url('formulas/formulas_management')?>'>Formulas</a> 
+		<a class="nav-link active" href='<?php echo site_url('materials_formulas/materials_formulas_management')?>'>Materials/Formulas</a> 
 		<a class="nav-link" href='<?php echo site_url('materials/materials_management')?>'>Materials</a> 
 	</nav>
 	<div style='height:20px;'></div>  
