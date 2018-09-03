@@ -1,0 +1,4 @@
+Current default language is Chinese (simplified). There is no official translation for traditional Chinese for Grocery CRUD,
+but we can create a new file using simplified Chinese as foundation and modify it with traditional translation.
+
+For more details about Grocery CRUD language set up plase follow this link: https://www.grocerycrud.com/examples/multilingual_functionality
