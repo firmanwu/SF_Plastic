@@ -1,0 +1,3 @@
+Copy the file contained in this folder into /etc/nginx/sites-available/ 
+Create a soft link to this file from the folder: /etc/nginx/sites-enabled/
+Restart nginx service
