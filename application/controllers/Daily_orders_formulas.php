@@ -30,6 +30,7 @@ class Daily_orders_formulas extends CI_Controller {
 						$crud->set_relation('order_id', "daily_order",'label');
 						$crud->set_relation('formula_id', "formula",'name');
 						$crud->add_action('Process','','bootstrap','el el-qrcode');
+						$crud->add_action('Process','','','el el-qrcode', array($this, 'prepare_materials'));
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
 
 						$output = $crud->render();
@@ -44,6 +45,10 @@ class Daily_orders_formulas extends CI_Controller {
 	public function index()
 	{
 		$this->_example_output((object)array('output' => '' , 'js_files' => array() , 'css_files' => array()));
+	}
+
+	public function prepare_materials($key, $row){
+		return site_url('bootstrap?material_id='.$key);
 	}
 
 }
