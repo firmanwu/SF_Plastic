@@ -269,7 +269,7 @@
 
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <a href="javascript:void(0)" class="clear-filtering dropdown-item">
-                                                            <i class="el el-eraser"></i> Clear filtering
+                                                            <i class="el el-eraser"></i> <?php echo $this->l('list_clear_filtering'); ?>
                                                         </a>
                                                     </div>
                                                 </div>
