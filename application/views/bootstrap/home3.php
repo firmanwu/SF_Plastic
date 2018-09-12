@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
     <head>
-        <title>Beautiful Fixed Slide Out Navigation - Codrops</title>
+        <title>樹脂生產管理系統</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" href="assets/css/style_menu.css" type="text/css" charset="utf-8"/>
 <!--         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
@@ -45,10 +45,10 @@
     <body>
         <div class="header"></div>
         <ul id="navigation">
-            <li class="home"><a href="#"><span>Home</span></a></li>
-            <li class="about"><a href="materials_formulas/materials_formulas_management"><span>Formulas/Materials</span></a></li>
-            <li class="search"><a href="daily_orders_formulas/daily_orders_formulas_management"><span>Daily Production</span></a></li>
-            <li class="photos"><a href=""><span>Mixing Process</span></a></li>
+            <li class="home"><a href="#"><span>首頁</span></a></li>
+            <li class="about"><a href="materials_formulas/materials_formulas_management"><span>配方原料管理</span></a></li>
+            <li class="search"><a href="daily_orders_formulas/daily_orders_formulas_management"><span>生產排程管理</span></a></li>
+            <li class="photos"><a href=""><span>混料作業</span></a></li>
             <!-- <li class="rssfeed"><a href=""><span>Rss Feed</span></a></li>
             <li class="podcasts"><a href=""><span>Podcasts</span></a></li>
             <li class="contact"><a href=""><span>Contact</span></a></li> -->
