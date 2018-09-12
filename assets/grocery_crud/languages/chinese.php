@@ -72,7 +72,7 @@
 	$lang['error_min_file_size'] 		= '不能上傳大小為零的檔案';
 
 	/* Added in version 1.3.1 */
-	$lang['list_export'] 	= '輸出';
+	$lang['list_export'] 	= '匯出';
 	$lang['list_print'] 	= '列印';
 	$lang['minimize_maximize'] = '最小值 / 最大值';
 	
