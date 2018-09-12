@@ -25,12 +25,17 @@ class Daily_orders_formulas extends CI_Controller {
                         $crud->set_theme('bootstrap-v4');
 						//$crud->set_table('recipe');
 						$crud->set_table('formula_daily_order');
-						$crud->set_subject('Daily Order/Formula');
+						$crud->set_subject('生產排程');
 						//$crud->unset_fields('unit_id');
 						$crud->set_relation('order_id', "daily_order",'label');
 						$crud->set_relation('formula_id', "formula",'name');
 						$crud->add_action('Process','','bootstrap','el el-qrcode');
 						$crud->add_action('Process','','','el el-qrcode', array($this, 'prepare_materials'));
+                        $crud->display_as('formula_id', '配方名稱');
+                        $crud->display_as('order_id', '排程單編號');
+                        $crud->display_as('processed', '進度');
+                        $crud->display_as('date', '日期');
+                        $crud->display_as('number', '爐數');
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
 
 						$output = $crud->render();

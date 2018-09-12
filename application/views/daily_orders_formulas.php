@@ -48,14 +48,14 @@ foreach($css_files as $file): ?>
 <body>
 	<div class="header"></div>
         <ul id="navigation">
-            <li class="home"><a href="<?php echo site_url('home');?>"><span>Home</span></a></li>
-        <li class="about"><a href="<?php echo site_url('materials_formulas/materials_formulas_management');?>"><span>Formulas/Materials</span></a></li>
-        <li class="search"><a href="<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management');?>"><span>Daily Production</span></a></li>
-        <li class="photos"><a href=""><span>Mixing Process</span></a></li>
+            <li class="home"><a href="<?php echo site_url('home');?>"><span>首頁</span></a></li>
+        <li class="about"><a href="<?php echo site_url('materials_formulas/materials_formulas_management');?>"><span>配方原料管理</span></a></li>
+        <li class="search"><a href="<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management');?>"><span>生產排程管理</span></a></li>
+        <li class="photos"><a href=""><span>混料作業管理</span></a></li>
         </ul>
 	<nav class="nav nav-pills" data-spy="affix" data-offset-top="205" style="margin-bottom: 15pxpx;">
-		<a class="nav-link" href='<?php echo site_url('formulas/formulas_management?origin=dayprod')?>'>Formulas</a> 
-		<a class="nav-link active" href='<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management')?>'>Daily_orders/Formulas</a> 
+		<a class="nav-link" href='<?php echo site_url('formulas/formulas_management?origin=dayprod')?>'>配方管理</a> 
+		<a class="nav-link active" href='<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management')?>'>生產排程</a> 
 		<a class="nav-link" href='<?php echo site_url('daily_orders/daily_orders_management')?>'>Daily Orders</a> 
 	</nav>
 	<div style='height:20px;'></div>  

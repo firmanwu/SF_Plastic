@@ -25,7 +25,9 @@ class Materials extends CI_Controller {
                         $crud->set_theme('bootstrap-v4');
 						//$crud->set_table('recipe');
 						$crud->set_table('material');
-						$crud->set_subject('Material');
+						$crud->set_subject('原料');
+                        $crud->display_as('label', '原料');
+                        $crud->display_as('sort', '排序');
 						//$crud->set_relation('ingredient_id', "recipe_ingredient",'label');
 						//$crud->set_relation('recipe_id', "recipe",'name');
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
