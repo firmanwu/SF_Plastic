@@ -26,9 +26,10 @@ class Formulas extends CI_Controller {
 						//$crud->set_table('recipe');
 						$crud->set_table('formula');
 						$crud->set_subject('配方');
-                        $crud->display_as('name', '配方名稱');
+                        $crud->display_as('name', '配方');
+                        $crud->display_as('totalWeight', '總重量');
                         $crud->display_as('description', '描述');
-                        $crud->display_as('instructions', '使用說明');
+                        $crud->display_as('instructions', '操作說明');
 						//$crud->set_relation('ingredient_id', "recipe_ingredient",'label');
 						//$crud->set_relation('recipe_id', "recipe",'name');
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
