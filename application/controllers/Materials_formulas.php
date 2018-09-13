@@ -31,8 +31,11 @@ class Materials_formulas extends CI_Controller {
 						$crud->set_relation('formula_id', "formula",'name');
                         $crud->display_as('formula_id', '配方');
                         $crud->display_as('material_id', '原料');
-                        $crud->display_as('amount', '總重量');
-                        $crud->display_as('sort', '排序');
+                        $crud->display_as('weight', '原料重量');
+                        $crud->display_as('order', '順序');
+
+                        $crud->callback_after_insert(array($this, 'increaseFormulaTotalWeight'));
+                        $crud->callback_before_delete(array($this, 'decreaseFormulaTotalWeight'));
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
 
 						$output = $crud->render();
@@ -49,4 +52,24 @@ class Materials_formulas extends CI_Controller {
 		$this->_example_output((object)array('output' => '' , 'js_files' => array() , 'css_files' => array()));
 	}
 
+    public function increaseFormulaTotalWeight($post_array, $primary_key)
+    {
+        $this->load->model('formulas');
+
+        $formula_id = $post_array['formula_id'];
+        $weight = $post_array['weight'];
+        $this->formulas->increaseTotalWeightByID($formula_id, $weight);
+    }
+
+    public function decreaseFormulaTotalWeight($primary_key)
+    {
+        $this->load->model('formulas');
+        $this->load->model('materialsformulasmodel');
+
+        $query = $this->materialsformulasmodel->queryWeightByID($primary_key);
+
+        $formula_id = $query['formula_id'];
+        $weight = $query['weight'];
+        $this->formulas->decreaseTotalWeightByID($formula_id, $weight);
+    }
 }
