@@ -1725,7 +1725,9 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		// Convert to UTF-16LE and Prepend BOM
 		$string_to_export = "\xFF\xFE" .mb_convert_encoding($string_to_export, 'UTF-16LE', 'UTF-8');
 
-		$filename = "export-".date("Y-m-d_H:i:s").".xls";
+		//$filename = "export-".date("Y-m-d_H:i:s").".xls";
+        // Use Taiwan time
+		$filename = "export-".gmdate("Y-m-d_H:i:s", (time() + (28800))).".xls";
 
 		header('Content-type: application/vnd.ms-excel;charset=UTF-16LE');
 		header('Content-Disposition: attachment; filename='.$filename);
