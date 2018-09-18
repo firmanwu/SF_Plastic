@@ -12,7 +12,7 @@
     <script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
     <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
     <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
-
+    <link href="<?php echo base_url('assets/grocery_crud/themes/bootstrap-v4/css/elusive-icons/css/elusive-icons.min.css'); ?>" rel="stylesheet">
     <link href="<?php echo base_url('assets/bootstrap/css/pe-icon-7-stroke.css'); ?>" rel="stylesheet" />
     <link href="<?php echo base_url('assets/bootstrap/css/ct-navbar.css'); ?>" rel="stylesheet" />
 

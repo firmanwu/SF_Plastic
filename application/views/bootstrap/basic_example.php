@@ -1,7 +1,17 @@
 <nav class="navbar navbar-inverse navbar-fixed-top bg-primary text-white">
+      <div class="container bg-primary" style="width: 1198px;">
+        <div class="row">
+          <div class="col-sm-6">
+            <h3 class="bg-primary text-white">Material preparation for:  
+          </h3>
+          </div>
+          <div class="col-sm-6">
+            <button type="button" class="btn back-btn el el-step-backward text-black">Go Back</button>
+          </div>
+        </div>
+      </div>
       <div class="container bg-primary text-white" style="width: 1198px;">
-        <h3 class="bg-primary text-white">Material preparation for:  
-        </h3>
+        
       </div>
     </nav>
 
@@ -230,8 +240,10 @@
     //user is "finished typing," do something
     function doneTyping () {
       var qr_value = $("#qr-box").val();
-      var qr_nohttp = qr_value.substring(7,qr_value.length);
-      var qr_object = JSON.parse(qr_nohttp);
+      if (qr_value.indexOf('http') != -1){
+        qr_value = qr_value.substring(7,qr_value.length);
+      }
+      var qr_object = JSON.parse(qr_value);
 
       //qr_value.replace("http://"," ");
       $('#material-id-hidden').text(qr_object.material_id);
@@ -320,6 +332,12 @@
       //Close modal window
       $(".modal").modal('toggle');
     }
+
+    //On Go back event
+    $(".back-btn").on('click', function(){
+      parent.history.back();
+      return false;
+    });
   });
 
   function prettyPrint(textarea_id) {
@@ -440,5 +458,10 @@
       background-color: #24E0FF;
       border-radius: 50%;
       box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #006 0 -1px 9px, #3F8CFF 0 2px 14px;
+    }
+    .back-btn{
+      color: black;
+      position: relative;
+      float: right;
     }
 </style>
