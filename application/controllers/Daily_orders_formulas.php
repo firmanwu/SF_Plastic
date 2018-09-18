@@ -23,11 +23,10 @@ class Daily_orders_formulas extends CI_Controller {
                         $crud = new grocery_CRUD();
 
                         $crud->set_theme('bootstrap-v4');
-						//$crud->set_table('recipe');
 						$crud->set_table('formula_daily_order');
 						$crud->set_subject('生產排程');
 						//$crud->unset_fields('unit_id');
-						$crud->set_relation('order_id', "daily_order",'label');
+						$crud->set_relation('order_id', "daily_order",'order_id');
 						$crud->set_relation('formula_id', "formula",'name');
 						$crud->add_action('Process','','bootstrap','el el-qrcode');
 						$crud->add_action('Process','','','el el-qrcode', array($this, 'prepare_materials'));
@@ -39,7 +38,6 @@ class Daily_orders_formulas extends CI_Controller {
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
 
 						$output = $crud->render();
-
 						$this->_example_output($output);
 
                 }catch(Exception $e){

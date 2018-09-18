@@ -8,6 +8,8 @@
     <title><?php echo $page_title; ?></title>
 
     <!-- Bootstrap -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
     <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
     <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
 
