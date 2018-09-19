@@ -88,6 +88,9 @@
           ?>
           <br>
           <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>Confirm Order</button>
+          <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled>Print</button>
+
+
           <!-- Modal -->
           <div class="modal fade" id="materialCheckModal" tabindex="-1" role="dialog" aria-labelledby="materialCheckModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -170,6 +173,11 @@
     } else {
       $("[class^=led-red-box-").hide();
       $(".mat-check").prop('disabled', true);
+      $(".mat-check").prop('title', "Material already checked");
+      $(".confirm-btn-global").prop("disabled", true);
+      $(".confirm-btn-global").prop("title", "Order already confirmed");
+      $(".print-btn-global").prop("disabled", false);
+
     }
 
     //Show info when user click on button to check materials
@@ -338,6 +346,12 @@
       parent.history.back();
       return false;
     });
+
+    //Print functionallity
+    $('.print-btn-global').on('click', function() {  
+      window.print();  
+      return false; // why false?
+    });
   });
 
   function prettyPrint(textarea_id) {
@@ -346,6 +360,8 @@
       var pretty = JSON.stringify(obj, undefined, 4);
       $(textarea_id).val(pretty);
   }
+
+
 </script>
   
 <style type="text/css">
@@ -464,4 +480,8 @@
       position: relative;
       float: right;
     }
+    .print-btn-global{
+      padding:9px 12px;
+    }
+
 </style>
