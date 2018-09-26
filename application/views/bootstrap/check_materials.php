@@ -34,7 +34,7 @@
                     echo ' '.$formula_id['formula_id'];
                 ?>
               </p>
-              <p class="lead text-left">Here the list of materials will be displayed and the operator must process it in the proper way. At this step only Material ID will be check when the qr code is read.
+              <p class="lead text-left" style="width: 1100px;">Here the list of materials will be displayed and the operator must process it in the proper way. At this step only Material ID will be check when the qr code is read.
               </p>
           </div>
         </div>
@@ -72,13 +72,11 @@
                                 <textarea class="input-textbox-'.$row_number.'" placeholder="QR code information after read" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
                         </div>';
                    echo '<div class="col-sm-2 text-center"> 
-                            <div class="led-red-box-'.$row_number.'">
+                            <div class="led-red-box-'.$row_number.' align-middle">
                               <div class="led-red"></div>
-                              <p class="led-red-label">Red LED</p>
                             </div>
-                            <div class="led-green-box-'.$row_number.'" >
+                            <div class="led-green-box-'.$row_number.' align-middle" style="vertical-align:middle;">
                               <div class="led-green"></div>
-                              <p class="led-green-label">Green LED</p>
                             </div>
                         </div>';                        
                //}
@@ -482,6 +480,9 @@
     }
     .print-btn-global{
       padding:9px 12px;
+    }
+    div[class^="value-"], div[class*=" value-"] {
+      text-align: left;
     }
 
 </style>

@@ -55,4 +55,4 @@ $route['translate_uri_dashes'] = FALSE;
 
 //$route['index.php/bootstrap/(:num)'] = 'bootstrap';
 
-$route['bootstrap/(:num)'] = 'bootstrap';
+$route['check_materials/(:num)'] = 'check_materials';

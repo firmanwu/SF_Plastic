@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bootstrap extends CI_Controller {
+class Check_materials extends CI_Controller {
 
 	public function index( $material_id = NULL )
 	{
@@ -18,7 +18,7 @@ class Bootstrap extends CI_Controller {
 		$data['formula_name'] = $this->materials->get_formula_name_from_id($formula_info['formula_id']);	
 		$data['page_title'] = 'Check daily orders';
 		$this->load->view('layout/header.php', $data);
-		$this->load->view('bootstrap/basic_example.php', $data);
+		$this->load->view('bootstrap/check_materials.php', $data);
 		$this->load->view('layout/footer.php', $data);
 	}
 }
