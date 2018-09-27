@@ -51,7 +51,7 @@ foreach($css_files as $file): ?>
             <li class="home"><a href="<?php echo site_url('home');?>"><span>首頁</span></a></li>
         <li class="about"><a href="<?php echo site_url('materials_formulas/materials_formulas_management');?>"><span>配方原料管理</span></a></li>
         <li class="search"><a href="<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management');?>"><span>生產排程管理</span></a></li>
-        <li class="photos"><a href="daily_orders_formulas_prod/daily_orders_formulas_production"><span>混料作業管理</span></a></li>
+        <li class="photos"><a href="<?php echo site_url('daily_orders_formulas_prod/daily_orders_formulas_production');?>"><span>混料作業管理</span></a></li>
         </ul>
 	<nav class="nav nav-pills" data-spy="affix" data-offset-top="205" style="margin-bottom: 15pxpx;">
 		<a class="nav-link" href='<?php echo site_url('formulas/formulas_management?origin=dayprod')?>'>配方管理</a> 

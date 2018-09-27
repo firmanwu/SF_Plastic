@@ -2,7 +2,7 @@
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
           <div class="col-sm-6">
-            <h3 class="bg-primary text-white">Material preparation for:  
+            <h3 class="bg-primary text-white">Produce mixture for:  
           </h3>
           </div>
           <div class="col-sm-6">
@@ -34,7 +34,7 @@
                     echo ' '.$formula_id['formula_id'];
                 ?>
               </p>
-              <p class="lead text-left" style="width: 1100px;">Here the list of materials will be displayed and the operator must process it in the proper way. At this step only Material ID will be check when the qr code is read.
+              <p class="lead text-left" style="width: 1100px;">Here the list of materials will be displayed and the operator must process it in the proper way. At this stage the weigth of the materials is the key value. and when all of then are weighted and passed the check, the operator can proceed to mix the materials and confirm manually this step.
               </p>
           </div>
         </div>
@@ -57,7 +57,7 @@
                    foreach ($array as $key => $value) {
                         
                         echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
-                        echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'> ".$key." </div>";
+                        echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                         echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
                         echo '</div>';
                         $param_number++;
@@ -66,6 +66,10 @@
                    echo '<div class="col-sm-2 text-center border-right"> 
                                 <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
                                   Check Material
+                                </button>
+                                <p></p>
+                                <button type="button" class="btn btn-primary mat-weight check-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
+                                  Weight Material
                                 </button>
                         </div>';
                    echo '<div class="col-sm-4 text-center border-right"> 
@@ -89,7 +93,7 @@
           <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled>Print</button>
 
 
-          <!-- Modal -->
+          <!-- Modal for material check -->
           <div class="modal fade" id="materialCheckModal" tabindex="-1" role="dialog" aria-labelledby="materialCheckModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -101,13 +105,42 @@
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    Please read the QRcode with the reader
+                    <p>Please, put the material in the scale and input the read value</p>
+                    <br>
                     <div class="row">
                       <div class="col-sm-6">
-                        <div class="material-label float-left"></div>
-                        <div class="material-id float-left"></div>
-                        <div class="material-amount float-left"></div>
-                        <div class="material-sort float-left"></div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Name: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-label float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Id: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-id float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Amount: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-amount float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Sort: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-sort float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
                         <input type="hidden" id="row-number-hide" value="">
                       </div>
                       <div class="col-sm-6">
@@ -154,9 +187,101 @@
               </div>
             </div>
           </div>
-       <!--  <iframe style="border:0; background:#e8f7ff;width:100%;height:300px" src="http://sf_plastic.test:8888/qrcodepage">  
-        </iframe> -->
-          
+
+          <!-- Modal for material weigthing step-->
+          <div class="modal fade" id="materialWeightModal" tabindex="-1" role="dialog" aria-labelledby="materialWeightModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Weight Material</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="container" style="width: auto;">
+                  <div class="modal-body">
+                    <p>Please, put the material in the scale and input the read value</p>
+                    <br>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Name: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-label float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Id: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-id float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Amount: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-amount float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Sort: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-sort float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <input type="hidden" id="row-number-hide" value="">
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="row">
+                          <div class="col-sm-12"> 
+                            <input type="text" id="qr-box" placeholder="Place the cursor here and read the qrcode">
+                          </div>
+                        </div>
+                        <div class="row row-qr-name" style="display: none;">
+                          <div class="col-sm-6">
+                            <label id="label-name">Name: </label>
+                          </div>
+                          <div class="col-sm-6">
+                            <span name="material-name-hidden" id="material-name-hidden"> </span>
+                          </div>
+                        </div>
+                        <div class="row row-qr-id" style="display: none;">
+                          <div class="col-sm-6">
+                            <label id="label-id">Id: </label>
+                          </div>
+                          <div class="col-sm-6">
+                            <span name="material-id-hidden" id="material-id-hidden"> </span>
+                          </div>
+                        </div>
+                        <div class="row row-qr-amount" style="display: none;">
+                          <div class="col-sm-6">
+                            <label id="label-amount"> Amount: </label>
+                          </div>
+                          <div class="col-sm-6">
+                            <span name="amount-hidden" id="amount-hidden" > </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <small id="match-warning" style="color: green; font-weight: bold;">Order requirements are matched. Proceed to confirm</small>
+                    <small id="non-match-warning" style="color: red; font-weight: bold;">One or more elements don't match with the order requirements</small>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn reset-btn">Reset</button>
+                  <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
+                </div>
+              </div>
+            </div>
+          </div>
         
       </div>
       
@@ -179,7 +304,7 @@
     }
 
     //Show info when user click on button to check materials
-    $( ":button.mat-check" ).on("click", function () {
+    $( ":button.mat-check, :button.mat-weight" ).on("click", function () {
       $("#non-match-warning").hide();
       $("#match-warning").hide();
       $('#material-name-hidden').css({"background-color":"white"});
@@ -482,6 +607,10 @@
       padding:9px 12px;
     }
     div[class^="value-"], div[class*=" value-"] {
+      text-align: left;
+    }
+
+    .modal-label {
       text-align: left;
     }
 

@@ -57,7 +57,7 @@
                    foreach ($array as $key => $value) {
                         
                         echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
-                        echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'> ".$key." </div>";
+                        echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                         echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
                         echo '</div>';
                         $param_number++;
@@ -101,13 +101,42 @@
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    Please read the QRcode with the reader
+                    <p>Please read the QRcode with the reader</p>
+                    <br>
                     <div class="row">
                       <div class="col-sm-6">
-                        <div class="material-label float-left"></div>
-                        <div class="material-id float-left"></div>
-                        <div class="material-amount float-left"></div>
-                        <div class="material-sort float-left"></div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Name: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-label float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Id: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-id float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Amount: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-amount float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-3">
+                            <label>Sort: </label>
+                          </div> 
+                          <div class="col-sm-9">
+                            <div class="material-sort float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
                         <input type="hidden" id="row-number-hide" value="">
                       </div>
                       <div class="col-sm-6">
@@ -482,6 +511,9 @@
       padding:9px 12px;
     }
     div[class^="value-"], div[class*=" value-"] {
+      text-align: left;
+    }
+    .modal-label {
       text-align: left;
     }
 
