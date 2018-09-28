@@ -54,7 +54,7 @@
             <li class="contact"><a href=""><span>Contact</span></a></li> -->
         </ul>
         <div class="logo">
-            <img src="assets/images/generic_logo.jpg" alt="logo" class="img-logo">
+            <img src="assets/images/TEMC.png" alt="logo" class="img-logo">
         </div>
 
         <!-- <div class="info">
