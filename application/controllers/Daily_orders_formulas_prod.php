@@ -14,7 +14,7 @@ class Daily_orders_formulas_prod extends CI_Controller {
 
 	public function _example_output($output = null)
 	{
-		$this->load->view('daily_orders_formulas.php',(array)$output);
+		$this->load->view('daily_orders_formulas_prod.php',(array)$output);
 	}
 
 	public function daily_orders_formulas_production()

@@ -58,7 +58,7 @@ foreach($css_files as $file): ?>
 		<a class="nav-link active" href='<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management')?>'>生產排程</a> 
 		<a class="nav-link" href='<?php echo site_url('daily_orders/daily_orders_management')?>'>Daily Orders</a> 
 	</nav>
-	<div style='height:20px;'></div>  
+	<div style='height:40px;'></div>  
     <div style="padding: 10px">
 		<?php echo $output; ?>
     </div>

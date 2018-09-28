@@ -44,20 +44,23 @@ foreach($css_files as $file): ?>
             text-transform:uppercase;
             text-decoration:none;
         }
+        .first-container{
+            padding: 65px 10px;
+        }
     </style>
 <body>
 	<div class="header"></div>
         <ul id="navigation">
             <li class="home"><a href="<?php echo site_url('home');?>"><span>首頁</span></a></li>
-        <li class="about"><a href="<?php echo site_url('materials_formulas/materials_formulas_management');?>"><span>配方原料管理</span></a></li>
-        <li class="search"><a href="<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management');?>"><span>生產排程管理</span></a></li>
-        <li class="photos"><a href="<?php echo site_url('daily_orders_formulas_prod/daily_orders_formulas_production');?>"><span>混料作業管理</span></a></li>
+            <li class="about"><a href="<?php echo site_url('materials_formulas/materials_formulas_management');?>"><span>配方原料管理</span></a></li>
+            <li class="search"><a href="<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management');?>"><span>生產排程管理</span></a></li>
+            <li class="photos"><a href="<?php echo site_url('daily_orders_formulas_prod/daily_orders_formulas_production');?>"><span>混料作業管理</span></a></li>
         </ul>
-	<nav class="nav nav-pills" data-spy="affix" data-offset-top="205" style="margin-bottom: 15pxpx;">
-		<a class="nav-link active" href='<?php echo site_url('daily_orders_formulas_prod/daily_orders_formulas_production')?>'>生產排程</a> 
-	</nav>
+	<!-- <nav class="nav nav-pills" data-spy="affix" data-offset-top="205" style="margin-bottom: 15pxpx;">
+		<a class="nav-link active" href='<?php //echo site_url('daily_orders_formulas_prod/daily_orders_formulas_production')?>'>生產排程</a> 
+	</nav> -->
 	<div style='height:20px;'></div>  
-    <div style="padding: 10px">
+    <div class="first-container">
 		<?php echo $output; ?>
     </div>
     <?php foreach($js_files as $file): ?>
