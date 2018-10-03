@@ -28,10 +28,8 @@ CREATE TABLE IF NOT EXISTS `daily_order` (
   UNIQUE KEY `order_label` (`label`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在傾印表格  temc_production_final.daily_order 的資料：~1 rows (大約)
+-- 正在傾印表格  temc_production_final.daily_order 的資料：~0 rows (大約)
 /*!40000 ALTER TABLE `daily_order` DISABLE KEYS */;
-REPLACE INTO `daily_order` (`order_id`, `label`, `date`, `number`, `processed`, `notes`) VALUES
-	(1, 'Barco LTD', '2018-08-31', 2, 0, '<p>\r\n	Formula B</p>\r\n');
 /*!40000 ALTER TABLE `daily_order` ENABLE KEYS */;
 
 -- 傾印  表格 temc_production_final.formula 結構
@@ -62,18 +60,16 @@ REPLACE INTO `formula` (`formula_id`, `name`, `totalWeight`, `description`, `ins
 -- 傾印  表格 temc_production_final.formula_daily_order 結構
 CREATE TABLE IF NOT EXISTS `formula_daily_order` (
   `formula_dorder_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) NOT NULL,
   `formula_id` int(10) unsigned NOT NULL,
-  `order_id` int(10) unsigned NOT NULL,
-  `processed` tinyint(1) NOT NULL DEFAULT 0,
+  `materialCheck` tinyint(1) NOT NULL DEFAULT 0,
   `date` date NOT NULL,
-  `number` int(10) NOT NULL DEFAULT 1,
+  `producedAmount` int(10) NOT NULL DEFAULT 1,
   PRIMARY KEY (`formula_dorder_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- 正在傾印表格  temc_production_final.formula_daily_order 的資料：~0 rows (大約)
 /*!40000 ALTER TABLE `formula_daily_order` DISABLE KEYS */;
-REPLACE INTO `formula_daily_order` (`formula_dorder_id`, `formula_id`, `order_id`, `processed`, `date`, `number`) VALUES
-	(1, 3, 1, 0, '2018-08-31', 2);
 /*!40000 ALTER TABLE `formula_daily_order` ENABLE KEYS */;
 
 -- 傾印  表格 temc_production_final.formula_material 結構
@@ -86,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `formula_material` (
   PRIMARY KEY (`formula_material_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
 
--- 正在傾印表格  temc_production_final.formula_material 的資料：~7 rows (大約)
+-- 正在傾印表格  temc_production_final.formula_material 的資料：~62 rows (大約)
 /*!40000 ALTER TABLE `formula_material` DISABLE KEYS */;
 REPLACE INTO `formula_material` (`formula_material_id`, `formula_id`, `material_id`, `weight`, `order`) VALUES
 	(1, 1, 1, 1500.00, 1),
@@ -180,21 +176,6 @@ REPLACE INTO `material` (`material_id`, `label`) VALUES
 	(6, '原料F'),
 	(7, '原料G');
 /*!40000 ALTER TABLE `material` ENABLE KEYS */;
-
--- 傾印  表格 temc_production_final.unit 結構
-CREATE TABLE IF NOT EXISTS `unit` (
-  `unit_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `label` varchar(64) DEFAULT NULL,
-  `sort` int(10) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY (`unit_id`),
-  UNIQUE KEY `unit_label_uk` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- 正在傾印表格  temc_production_final.unit 的資料：~0 rows (大約)
-/*!40000 ALTER TABLE `unit` DISABLE KEYS */;
-REPLACE INTO `unit` (`unit_id`, `label`, `sort`) VALUES
-	(1, 'Kg', 1);
-/*!40000 ALTER TABLE `unit` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
