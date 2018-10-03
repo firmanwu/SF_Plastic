@@ -53,8 +53,8 @@
 	/* Added in version 1.2.1 */
 	$lang['set_relation_title']		= '選擇 {field_display_as}';
 	$lang['list_record']			= '紀錄';
-	$lang['form_inactive']			= '停用';
-	$lang['form_active']			= '啟用';
+	$lang['form_inactive']			= '待確認';
+	$lang['form_active']			= '已確認';
 
 	/* Added in version 1.2.2 */
 	$lang['form_save_and_go_back']	= '儲存並返回列表';
