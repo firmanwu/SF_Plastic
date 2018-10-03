@@ -56,7 +56,6 @@ foreach($css_files as $file): ?>
 	<nav class="nav nav-pills" data-spy="affix" data-offset-top="205" style="margin-bottom: 15pxpx;">
 		<a class="nav-link" href='<?php echo site_url('formulas/formulas_management?origin=dayprod')?>'>配方管理</a> 
 		<a class="nav-link active" href='<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management')?>'>生產排程</a> 
-		<a class="nav-link" href='<?php echo site_url('daily_orders/daily_orders_management')?>'>Daily Orders</a> 
 	</nav>
 	<div style='height:40px;'></div>  
     <div style="padding: 10px">

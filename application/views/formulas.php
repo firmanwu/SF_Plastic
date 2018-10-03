@@ -37,7 +37,6 @@ foreach($css_files as $file): ?>
 			{
 		?>
 			<a class="nav-link" href='<?php echo site_url('daily_orders_formulas/daily_orders_formulas_management')?>'>生產排程</a> 
-		<a class="nav-link" href='<?php echo site_url('daily_orders/daily_orders_management')?>'>Daily Orders</a>
 		<?php 
 			}
 		?>
