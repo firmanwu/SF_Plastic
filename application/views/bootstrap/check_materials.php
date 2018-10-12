@@ -2,11 +2,11 @@
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
           <div class="col-sm-6">
-            <h3 class="bg-primary text-white">Material preparation for:  
+            <h3 class="bg-primary text-white">混料前置作業
           </h3>
           </div>
           <div class="col-sm-6">
-            <button type="button" class="btn back-btn el el-step-backward text-black">Go Back</button>
+            <button type="button" class="btn back-btn el el-step-backward text-black">返回</button>
           </div>
         </div>
       </div>
@@ -19,31 +19,21 @@
 
       <div class="starter-template">
         <div class="row">
-          <div class="col-xs-12 col-md-8 col-sm-6">
-              <p class="text-left">Formula Name: 
+          <div class="col-xs-12 col-md-8 col-sm-6" >
+              <p class="text-left" style="font-size:24px;">配方： 
                 <?php
-                    //$formula_string = json_decode(json_encode($formula_name[0]), true); 
                     $formula_name = json_decode(json_encode($formula_name[0]), true);
                     echo ' '.$formula_name['name'];
                 ?>
-                <br>
-                Formula ID: 
-                <?php
-                    //$formula_string = json_decode(json_encode($formula_name[0]), true);
-                    $formula_id = json_decode(json_encode($query_dorder_formula[0]), true);
-                    echo ' '.$formula_id['formula_id'];
-                ?>
-              </p>
-              <p class="lead text-left" style="width: 1100px;">Here the list of materials will be displayed and the operator must process it in the proper way. At this step only Material ID will be check when the qr code is read.
               </p>
           </div>
         </div>
           <!-- Dynamic table start -->   
           <div class="row header bg-primary text-white" style="boder: black solid 2px;">
-            <div class="col-sm-4 text-weight-bold" style="font-size:24px;">Material</div>
-            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">Actions</div>
-            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">Input read</div>
-            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">Status</div>
+            <div class="col-sm-4 text-weight-bold" style="font-size:24px;">原料</div>
+            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">執行項目</div>
+            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">QR code 讀取內容</div>
+            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">確認結果</div>
           </div>
           <?php
             $row_number=0;
@@ -85,8 +75,8 @@
             }
           ?>
           <br>
-          <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>Confirm Order</button>
-          <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled>Print</button>
+          <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>完成混料作業</button>
+          <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled> 列印</button>
 
 
           <!-- Modal -->
