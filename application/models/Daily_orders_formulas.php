@@ -11,7 +11,7 @@ class Daily_orders_formulas extends CI_Model {
 			$this->db->where('formula_dorder_id', $formula_dorder_id);
 			$query = $this->db->get();
 			//Filter and sort all parameters
-			$display_params = array('formula_dorder_id', 'order_id', 'formula_id', 'processed', 'date', 'number');
+			$display_params = array('formula_dorder_id', 'order_id', 'formula_id', 'materialCheck', 'date', 'producedAmount');
             $required_params = array();
             foreach ($query->result() as $row) {
             	$array = json_decode(json_encode($row),true);

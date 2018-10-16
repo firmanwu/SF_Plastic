@@ -194,7 +194,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
     //Initially we hide the green leds if processed attribute in the DB is 0 (not processed)
-    var processed = '<?php echo $formula_id["processed"]?>';
+    var processed = '<?php echo $formula_id["materialCheck"]?>';
     if ( processed === '0'){
       $("[class^=led-green-box-").hide();
     } else {
