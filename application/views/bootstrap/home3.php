@@ -48,8 +48,8 @@
             <li class="home"><a href="#"><span>首頁</span></a></li>
             <li class="about"><a href="materials_formulas/materials_formulas_management"><span>配方原料管理</span></a></li>
             <li class="search"><a href="daily_orders_formulas/daily_orders_formulas_management"><span>生產排程管理</span></a></li>
-            <li class="photos"><a href="daily_orders_formulas_prod/daily_orders_formulas_production"><span>混料作業</span></a></li>
-            <!-- <li class="rssfeed"><a href=""><span>Rss Feed</span></a></li>
+            <!-- <li class="photos"><a href="daily_orders_formulas_prod/daily_orders_formulas_production"><span>混料作業</span></a></li>
+            <li class="rssfeed"><a href=""><span>Rss Feed</span></a></li>
             <li class="podcasts"><a href=""><span>Podcasts</span></a></li>
             <li class="contact"><a href=""><span>Contact</span></a></li> -->
         </ul>
