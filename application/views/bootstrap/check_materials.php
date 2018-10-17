@@ -58,6 +58,10 @@
                                 <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
                                   Check Material
                                 </button>
+                                <p></p>
+                                <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal2" data-target="#materialWeightModal">
+                                  Weight Material
+                                </button>
                         </div>';
                    echo '<div class="col-sm-4 text-center border-right"> 
                                 <textarea class="input-textbox-'.$row_number.'" placeholder="QR code information after read" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
@@ -80,7 +84,7 @@
           <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled> 列印</button>
 
 
-          <!-- Modal -->
+          <!-- Modal 1 -->
           <div class="modal fade" id="materialCheckModal" tabindex="-1" role="dialog" aria-labelledby="materialCheckModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -170,10 +174,42 @@
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
                   <button type="button" class="btn reset-btn">Reset</button>
                   <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
+                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
                 </div>
               </div>
             </div>
           </div>
+
+
+
+          <!-- Modal 2 -->
+          <div class="modal fade" id="materialWeightModal" tabindex="-1" role="dialog" aria-labelledby="materialWeightModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Weight Material</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="container" style="width: auto;">
+                  <div class="modal-body">
+                    <p>Please wait for the scale output</p>
+                    <br>
+                    
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn reset-btn">Reset</button>
+                  <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
+                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
        <!--  <iframe style="border:0; background:#e8f7ff;width:100%;height:300px" src="http://sf_plastic.test:8888/qrcodepage">  
         </iframe> -->
           
@@ -188,10 +224,14 @@
     var processed = '<?php echo $formula_id["materialCheck"]?>';
     if ( processed === '0'){
       $("[class^=led-green-box-").hide();
+      $(".mat-weight").prop('disabled', true);
+      $(".mat-weight").prop('title', "Material not checked");
     } else {
       $("[class^=led-red-box-").hide();
       $(".mat-check").prop('disabled', true);
       $(".mat-check").prop('title', "Material already checked");
+      $(".mat-weight").prop('disabled', false);
+      $(".mat-weight").prop('title', "Material ready to be weigthed");
       $(".confirm-btn-global").prop("disabled", true);
       $(".confirm-btn-global").prop("title", "Order already confirmed");
       $(".print-btn-global").prop("disabled", false);
@@ -232,6 +272,11 @@
     //Event on click for Confirm correct data in modal window
     $(".confirm-btn").on('click', function(){
       confirm_material();
+    });
+    $(".confirm-weight-btn").on('click', function(){
+      //confirm_material();
+      $("#materialCheckModal").modal('toggle');
+      $("#materialWeightModal").modal('toggle');
     });
 
     //Focus the mouse pointer in the text input to ease user handling
