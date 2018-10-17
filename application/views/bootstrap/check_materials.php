@@ -202,8 +202,7 @@
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
                   <button type="button" class="btn reset-btn">Reset</button>
-                  <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
-                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
+                  <button type="button" class="btn btn-primary confirm-weight-final-btn">Confirm</button>
                 </div>
               </div>
             </div>
