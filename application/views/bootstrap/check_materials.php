@@ -24,6 +24,7 @@
                 <?php
                     $formula_name = json_decode(json_encode($formula_name[0]), true);
                     echo ' '.$formula_name['name'];
+                    $formula_id = json_decode(json_encode($query_dorder_formula[0]), true);
                 ?>
               </p>
           </div>
