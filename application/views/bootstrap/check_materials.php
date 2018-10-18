@@ -73,6 +73,12 @@
                             <div class="led-green-box-'.$row_number.' align-middle" style="vertical-align:middle;">
                               <div class="led-green"></div>
                             </div>
+                            <div class="print-qrcode-'.$row_number.' align-middle" style="vertical-align:middle;">
+                            <br>
+                              <button type="button" class="btn btn-primary print-qrcode print-qrcode-button-'.$row_number.'" data-toggle="modal" data-target="#printQrCodeModal">
+                                  Print QRcode
+                                </button>
+                            </div>
                         </div>';                        
                //}
                echo '</div>';
@@ -196,13 +202,53 @@
                   <div class="modal-body">
                     <p>Please wait for the scale output</p>
                     <br>
-                    <input type="text" id="hide-weight" value="">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="row modal-label">
+                          <div class="col-sm-6">
+                            <label>Req. Weight: </label><span name="weight-req" id="weight-req" > </span>
+                          </div> 
+                          <div class="col-sm-6">
+                            <input type="text" id="hide-weight" value="">
+                          </div> 
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  <small id="match-weight-warning" style="color: green; font-weight: bold;">Material weigth match the requirements for the formula. Proceed to confirm</small>
+                  <small id="non-match-weight-warning" style="color: red; font-weight: bold;">Material weigth DOES NOT match the requirements for the formula</small>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn reset-btn">Reset</button>
+                  <button type="button" class="btn reset-weight-btn">Reset</button>
                   <button type="button" class="btn btn-primary confirm-weight-final-btn">Confirm</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- Modal 3 -->
+          <div class="modal fade" id="printQrCodeModal" tabindex="-1" role="dialog" aria-labelledby="printQrCodeModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Print QRcode</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="container" style="width: auto;">
+                  <div class="modal-body">
+                    <p>QRcode and info related to current processed material</p>
+                    <br>
+                    <?php QRcode::png('Formula name: Formula 4', 'test.png', 'H', 10, 2);?>
+                    <img src="../test.png" title="qrcode">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary print-qrcode-final">Print QRcode</button>
                 </div>
               </div>
             </div>
@@ -223,6 +269,7 @@
     var processed = '<?php echo $formula_id["materialCheck"]?>';
     if ( processed === '0'){
       $("[class^=led-green-box-").hide();
+      $(".print-qrcode").prop('disabled', true);
       $(".mat-weight").prop('disabled', true);
       $(".mat-weight").prop('title', "Material not checked");
     } else {
@@ -245,6 +292,7 @@
       $('#material-name-hidden').css({"background-color":"white"});
       $('#material-id-hidden').css({"background-color":"white"});
       $('#amount-hidden').css({"background-color":"white"});
+      $('#hide-weight').css({"background-color":"white"});
 
      var row_button_classes = $(this).attr("class").split(" ");
      var last_button_class = row_button_classes[row_button_classes.length-1];
@@ -274,10 +322,16 @@
       confirm_material(true);
     });
     $(".confirm-weight-btn").on('click', function(){
+      $("#non-match-weight-warning").hide();
+      $("#match-weight-warning").hide();
+      $("#weight-req").text($("#amount-hidden").text());
       check_weight_output();
       confirm_material(false);
       $("#materialCheckModal").modal('toggle');
       $("#materialWeightModal").modal('toggle');
+    });
+    $(".confirm-weight-final-btn").on('click', function(){
+      confirm_weight(true);
     });
 
     //Focus the mouse pointer in the text input to ease user handling
@@ -289,6 +343,9 @@
     $("#match-warning").hide();
     $(".reset-btn").on("click", function (){
       reset_check_fields();
+    });
+    $(".reset-weight-btn").on("click", function (){
+      reset_weight_fields();
     });
     $(".reset-btn").prop("disabled", true);
     $(".confirm-btn").prop("disabled", true);
@@ -392,6 +449,14 @@
       $("#qr-box").get(0).focus();
     }
 
+    function reset_weight_fields(){
+      $(".confirm-weight-final-btn").prop("disabled", true);
+      $("#hide-weight").val("");
+      $("#hide-weight").hide();
+      $('#hide-weight').css({"background-color":"white"});
+      check_weight_output();
+    }
+
     function confirm_material(close_var){
       var current_row = $("#row-number-hide").val();
       var qr_data = $("#qr-box").val();
@@ -410,6 +475,29 @@
       //Close modal window
       if (close_var)
         $(".modal").modal('toggle');
+    }
+
+    function confirm_weight(close_var){
+
+      var current_row = $("#row-number-hide").val();
+      //enable print qrcode for that row
+      $(".print-qrcode-button-"+current_row).prop('disabled', false);
+      //Add json info to textarea
+      var scale_weight = $("#hide-weight").val();
+      var json_weight = ', "weight":"'+scale_weight+'"}';
+      
+      textarea_class = '.input-textbox-'+current_row;
+      var textarea_content = $(textarea_class).val();
+      var sliced_textarea = textarea_content.slice(0,-2);
+      $(textarea_class).val(sliced_textarea+json_weight);
+      //$(".led-green-box-"+current_row).show();
+      //$(".led-red-box-"+current_row).hide();
+
+      //Prettify textarea content
+      prettyPrint(textarea_class);
+      //Close modal window
+      $("#materialWeightModal").modal('toggle');
+
     }
 
     //On Go back event
@@ -469,9 +557,35 @@
         if (this.tryCount !== 0) {
           this.tryCount = 0;
         }
+        compare_weights();
       },
       timeout:3000
     });
+  }
+
+  function compare_weights(){
+    var formula_weight = $("#amount-hidden").text();
+    var scale_weight = $("#hide-weight").val();
+    var non_match = [];
+
+    var comparison_result = formula_weight.localeCompare(scale_weight);
+
+    if (comparison_result !== 0) non_match.push("Weight");
+
+    if (non_match.length !== 0) {
+      //alert("Non matching elements: "+JSON.stringify(non_match));
+      if (non_match.includes("Weight")) $('#hide-weight').css({"background-color":"red"});
+      $("#non-match-weight-warning").show();
+      $("#match-weight-warning").hide();
+      $(".reset-weight-btn").prop("disabled", false);
+      $(".confirm-weight-final-btn").prop("disabled", true);
+    } else {
+      $("#match-weight-warning").show();
+      $("#non-match-weight-warning").hide();
+      $(".reset-weight-btn").prop("disabled", false);
+      $(".confirm-weight-final-btn").prop("disabled", false);
+    }
+
   }
 
 

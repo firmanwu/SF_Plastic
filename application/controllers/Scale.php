@@ -69,7 +69,11 @@ class Scale extends CI_Controller {
     	parse_str(file_get_contents("php://input"),$post_vars);
     	var_dump($post_vars);
     	echo $post_vars['weight']." is the fruit\n";
-
+    	$is_number = is_numeric($post_vars['weight']);
+    	if ($is_number)
+    		generate_weight_file($post_vars['weight']);
+    	else
+    		echo "ERROR: scale output received is not numeric";
 		//$json_data = json_encode($data);
 		//var_dump($json_data);
 
@@ -77,4 +81,10 @@ class Scale extends CI_Controller {
 
 	}
 
+	public function generate_weight_file($weight){
+		$scale_output=$weight;
+		$json_string='{"weight":"'.$scale_output.'"}';
+		$file = 'assets/uploads/weight.txt';
+		file_put_contents($file, $json_string);
+	}
 }
