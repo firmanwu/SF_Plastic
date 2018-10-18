@@ -59,7 +59,7 @@
                                   Check Material
                                 </button>
                                 <p></p>
-                                <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal2" data-target="#materialWeightModal">
+                                <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
                                   Weight Material
                                 </button>
                         </div>';
@@ -196,7 +196,7 @@
                   <div class="modal-body">
                     <p>Please wait for the scale output</p>
                     <br>
-                    
+                    <input type="text" id="hide-weight" value="">
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -236,7 +236,8 @@
       $(".print-btn-global").prop("disabled", false);
 
     }
-
+    //Hide weigth input field
+    $("#hide-weight").hide();
     //Show info when user click on button to check materials
     $( ":button.mat-check" ).on("click", function () {
       $("#non-match-warning").hide();
@@ -270,10 +271,11 @@
 
     //Event on click for Confirm correct data in modal window
     $(".confirm-btn").on('click', function(){
-      confirm_material();
+      confirm_material(true);
     });
     $(".confirm-weight-btn").on('click', function(){
-      //confirm_material();
+      check_weight_output();
+      confirm_material(false);
       $("#materialCheckModal").modal('toggle');
       $("#materialWeightModal").modal('toggle');
     });
@@ -290,6 +292,7 @@
     });
     $(".reset-btn").prop("disabled", true);
     $(".confirm-btn").prop("disabled", true);
+    $(".confirm-weight-btn").prop("disabled", true);
 
     //setup before functions
     var typingTimer;                //timer identifier
@@ -357,10 +360,12 @@
         $("#non-match-warning").show();
         $(".reset-btn").prop("disabled", false);
         $(".confirm-btn").prop("disabled", true);
+        $(".confirm-weight-btn").prop("disabled", true);
       } else {
         $("#match-warning").show();
         $(".reset-btn").prop("disabled", false);
         $(".confirm-btn").prop("disabled", false);
+        $(".confirm-weight-btn").prop("disabled", false);
       }
     }
 
@@ -382,11 +387,12 @@
       $('#qr-box').show();
       $(".reset-btn").prop("disabled", true);
       $(".confirm-btn").prop("disabled", true);
+      $(".confirm-weight-btn").prop("disabled", true);
 
       $("#qr-box").get(0).focus();
     }
 
-    function confirm_material(){
+    function confirm_material(close_var){
       var current_row = $("#row-number-hide").val();
       var qr_data = $("#qr-box").val();
       if (qr_data.indexOf('http') != -1){
@@ -396,11 +402,14 @@
       $(textarea_class).val(qr_data);
       $(".led-green-box-"+current_row).show();
       $(".led-red-box-"+current_row).hide();
-      
+
+      //Enable Weight-button
+      $(".weight-button-"+current_row).prop("disabled", false);
       //Prettify textarea content
       prettyPrint(textarea_class);
       //Close modal window
-      $(".modal").modal('toggle');
+      if (close_var)
+        $(".modal").modal('toggle');
     }
 
     //On Go back event
@@ -421,6 +430,48 @@
       var obj = JSON.parse(ugly);
       var pretty = JSON.stringify(obj, undefined, 4);
       $(textarea_id).val(pretty);
+  }
+
+  function check_weight_output() {
+    var request = null;
+    request = $.ajax({
+      url: '../scale/get_output',
+      type: 'POST',
+      tryCount: 0,
+      retryLimit: 30,
+      async: true,
+      beforeSend: function() {
+        if (request != null){
+          request.abort();
+        }
+      },
+      error: function (jqXHR, textStatus){
+        if (textStatus === 'timeout' || textStatus === 'error') {
+          var error_msg = "Failed to retrieve information fron the scale. Try again or input the weight manually";
+          console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
+          this.tryCount++;
+          if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+          }
+          $("#hide-weight").show();
+          return;
+        }
+      },
+      success: function (data){
+        console.log("Scale output retrieved");
+        //Reset counter if previous request failed
+        $("#hide-weight").show();
+        //var json_string = JSON.stringify(data)
+        data = data.replace(/\s/g,'');
+        var obj = JSON.parse(data);
+        $("#hide-weight").val(obj.weight);
+        if (this.tryCount !== 0) {
+          this.tryCount = 0;
+        }
+      },
+      timeout:3000
+    });
   }
 
 
