@@ -99,7 +99,7 @@
             }
           ?>
           <br>
-          <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>完成混料作業</button>
+          <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>完成原料準備</button>
           <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled> 列印</button>
 
 
@@ -115,7 +115,7 @@
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>請使用 QR code 掃描器讀取資訊</p>
+                    <p>請使用 QR code 掃描器讀取資料</p>
                     <br>
                     <div class="row">
                       <div class="col-sm-6">
@@ -177,8 +177,8 @@
                         </div>
                       </div>
                     </div>
-                    <small id="match-warning" style="color: green; font-weight: bold;">Order requirements are matched. Proceed to confirm</small>
-                    <small id="non-match-warning" style="color: red; font-weight: bold;">One or more elements don't match with the order requirements</small>
+                    <small id="match-warning" style="color: green; font-weight: bold;">原料正確，請秤重</small>
+                    <small id="non-match-warning" style="color: red; font-weight: bold;">原料錯誤，請再次確認</small>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -198,20 +198,20 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Weight Material</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">原料秤重</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>Please wait for the scale output</p>
+                    <p>請等待電子磅秤傳送資料</p>
                     <br>
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="row modal-label">
                           <div class="col-sm-6">
-                            <label>Req. Weight: </label><span name="weight-req" id="weight-req" > </span>
+                            <label>所需重量</label><span name="weight-req" id="weight-req" > </span>
                           </div> 
                           <div class="col-sm-6">
                             <input type="text" id="hide-weight" value="">
@@ -220,13 +220,13 @@
                       </div>
                     </div>
                   </div>
-                  <small id="match-weight-warning" style="color: green; font-weight: bold;">Material weigth match the requirements for the formula. Proceed to confirm</small>
-                  <small id="non-match-weight-warning" style="color: red; font-weight: bold;">Material weigth DOES NOT match the requirements for the formula</small>
+                  <small id="match-weight-warning" style="color: green; font-weight: bold;">原料重量符合配方要求，請按確認鍵完成動作</small>
+                  <small id="non-match-weight-warning" style="color: red; font-weight: bold;">原料重量不符合配方要求</small>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn reset-weight-btn">Reset</button>
-                  <button type="button" class="btn btn-primary confirm-weight-final-btn">Confirm</button>
+                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
+                  <button type="button" class="btn reset-weight-btn">重置</button>
+                  <button type="button" class="btn btn-primary confirm-weight-final-btn">確認</button>
                 </div>
               </div>
             </div>
@@ -239,21 +239,21 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Print QRcode</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">列印 QR code</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>QRcode and info related to current processed material</p>
+                    <p>原料的 QR code 及相關資料</p>
                     <br>
                     <?php QRcode::png('Formula name: Formula 4', 'test.png', 'H', 10, 2);?>
                     <img src="../test.png" title="qrcode">
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary print-qrcode-final">Print QRcode</button>
+                  <button type="button" class="btn btn-primary print-qrcode-final">列印 QR code</button>
                 </div>
               </div>
             </div>
@@ -540,7 +540,7 @@
       },
       error: function (jqXHR, textStatus){
         if (textStatus === 'timeout' || textStatus === 'error') {
-          var error_msg = "Failed to retrieve information fron the scale. Try again or input the weight manually";
+          var error_msg = "讀取不到電子磅秤傳送來的資料。請再秤重一次或是手動輸入秤重結果";
           console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
           this.tryCount++;
           if (this.tryCount <= this.retryLimit) {
