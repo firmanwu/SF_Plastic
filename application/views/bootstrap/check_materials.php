@@ -2,7 +2,7 @@
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
           <div class="col-sm-6">
-            <h3 class="bg-primary text-white">混料前置作業
+            <h3 class="bg-primary text-white">原料準備作業
           </h3>
           </div>
           <div class="col-sm-6">
@@ -46,7 +46,20 @@
                   $array = json_decode(json_encode($row),true);
                   $param_number=0;
                    foreach ($array as $key => $value) {
-                        
+                        switch($key) {
+                            case "label":
+                                $key = "原料名稱";
+                                break;
+                            case "weight":
+                                $key = "所需重量";
+                                break;
+                            case "order":
+                                $key = "混料順序";
+                                break;
+                            default:
+                                break;
+                        }
+
                         echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
                         echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                         echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
@@ -56,15 +69,15 @@
                    echo '</div>';
                    echo '<div class="col-sm-2 text-center border-right"> 
                                 <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
-                                  Check Material
+                                  原料確認
                                 </button>
                                 <p></p>
                                 <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
-                                  Weight Material
+                                  原料秤重
                                 </button>
                         </div>';
                    echo '<div class="col-sm-4 text-center border-right"> 
-                                <textarea class="input-textbox-'.$row_number.'" placeholder="QR code information after read" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
+                                <textarea class="input-textbox-'.$row_number.'" placeholder="從 QR code 讀取到的內容" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
                         </div>';
                    echo '<div class="col-sm-2 text-center"> 
                             <div class="led-red-box-'.$row_number.' align-middle">
@@ -76,7 +89,7 @@
                             <div class="print-qrcode-'.$row_number.' align-middle" style="vertical-align:middle;">
                             <br>
                               <button type="button" class="btn btn-primary print-qrcode print-qrcode-button-'.$row_number.'" data-toggle="modal" data-target="#printQrCodeModal">
-                                  Print QRcode
+                                  列印 QR code
                                 </button>
                             </div>
                         </div>';                        
@@ -95,46 +108,38 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Check Material</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">秤重前原料確認</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>Please read the QRcode with the reader</p>
+                    <p>請使用 QR code 掃描器讀取資訊</p>
                     <br>
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Name: </label>
+                          <div class="col-sm-6">
+                            <label>原料名稱</label>
                           </div> 
-                          <div class="col-sm-9">
+                          <div class="col-sm-6">
                             <div class="material-label float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label">
+                        <div class="row modal-label" style="display: none;">
                           <div class="col-sm-3">
-                            <label>Id: </label>
-                          </div> 
-                          <div class="col-sm-9">
-                            <div class="material-id float-left" style="text-align:left;"></div>
-                          </div> 
-                        </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Amount: </label>
+                            <label>所需重量</label>
                           </div> 
                           <div class="col-sm-9">
                             <div class="material-amount float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Sort: </label>
+                        <div class="row modal-label" style="display: none;">
+                          <div class="col-sm-6">
+                            <label>混料順序</label>
                           </div> 
-                          <div class="col-sm-9">
+                          <div class="col-sm-6">
                             <div class="material-sort float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
@@ -143,7 +148,7 @@
                       <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-12"> 
-                            <input type="text" id="qr-box" placeholder="Place the cursor here and read the qrcode">
+                            <input type="text" id="qr-box" placeholder="請點選這裡再掃描 QR code">
                           </div>
                         </div>
                         <div class="row row-qr-name" style="display: none;">
@@ -177,10 +182,10 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn reset-btn">Reset</button>
-                  <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
-                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
+                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
+                  <button type="button" class="btn reset-btn">重置</button>
+                  <button type="button" class="btn btn-primary confirm-btn">確認</button>
+                  <!--<button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>-->
                 </div>
               </div>
             </div>

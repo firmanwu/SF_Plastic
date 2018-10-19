@@ -5,13 +5,14 @@ class Materials extends CI_Model {
 	public function get_formula_materials_sorted($formula_id)
     {
             $this->load->database();
-            $this->db->select('material.label, material.material_id, formula_material.weight, formula_material.order');
+            //$this->db->select('material.label, material.material_id, formula_material.weight, formula_material.order');
+            $this->db->select('material.label, formula_material.weight, formula_material.order');
 			$this->db->from('formula_material');
 			$this->db->join('material', 'formula_material.material_id = material.material_id', 'left');
 			$this->db->where('formula_material.formula_id', $formula_id);
 			$query = $this->db->get();
 			//Filter and sort all parameters
-			$display_params = array('material_id', 'label', 'amount', 'sort');
+			$display_params = array('label', 'weight', 'order');
             $required_params = array();
             foreach ($query->result() as $row) {
             	$array = json_decode(json_encode($row),true);
