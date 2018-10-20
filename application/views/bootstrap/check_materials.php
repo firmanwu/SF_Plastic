@@ -50,10 +50,10 @@
                             case "label":
                                 $key = "原料名稱";
                                 break;
-                            case "weight":
+                            case "amount":
                                 $key = "所需重量";
                                 break;
-                            case "order":
+                            case "sort":
                                 $key = "混料順序";
                                 break;
                             default:
@@ -128,8 +128,16 @@
                           </div> 
                         </div>
                         <div class="row modal-label" style="display: none;">
-                          <div class="col-sm-3">
+                          <div class="col-sm-6">
                             <label>所需重量</label>
+                          </div> 
+                          <div class="col-sm-6">
+                            <div class="material-id float-left" style="text-align:left;"></div>
+                          </div> 
+                        </div>
+                        <div class="row modal-label" style="display: none;">
+                          <div class="col-sm-6">
+                            <label>Amount: </label>
                           </div> 
                           <div class="col-sm-9">
                             <div class="material-amount float-left" style="text-align:left;"></div>
@@ -185,7 +193,7 @@
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
                   <button type="button" class="btn reset-btn">重置</button>
                   <button type="button" class="btn btn-primary confirm-btn">確認</button>
-                  <!--<button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>-->
+                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
                 </div>
               </div>
             </div>
@@ -386,8 +394,8 @@
       $('#amount-hidden').text(qr_object.amount);
 
       $('.row-qr-name').show();
-      $('.row-qr-id').show();
-      $('.row-qr-amount').show();
+      //$('.row-qr-id').show();
+      //$('.row-qr-amount').show();
       $('#qr-box').hide();
 
       compare();
