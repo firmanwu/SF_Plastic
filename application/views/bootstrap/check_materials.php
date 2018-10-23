@@ -329,6 +329,15 @@
      //store row number into hidden input to be able to modify leds
      $("#row-number-hide").val(row_number_for_class);  
     });
+    //Show info when user click on button to check materials
+    $( ":button.mat-weight" ).on("click", function () {
+      $("#non-match-weight-warning").hide();
+      $("#match-weight-warning").hide();
+      $("#weight-req").text($("#amount-hidden").text());
+      check_weight_output();
+      //confirm_material(false);
+      $("#materialWeightModal").modal('toggle');
+    });
 
     //Event on click for Confirm correct data in modal window
     $(".confirm-btn").on('click', function(){
@@ -470,7 +479,7 @@
       check_weight_output();
     }
 
-    function confirm_material(close_var){
+    function confirm_material(close_modal){
       var current_row = $("#row-number-hide").val();
       var qr_data = $("#qr-box").val();
       if (qr_data.indexOf('http') != -1){
@@ -486,8 +495,8 @@
       //Prettify textarea content
       prettyPrint(textarea_class);
       //Close modal window
-      if (close_var)
-        $(".modal").modal('toggle');
+      if (close_modal)
+        $("#materialCheckModal").modal('toggle');
     }
 
     function confirm_weight(close_var){
@@ -572,7 +581,7 @@
         }
         compare_weights();
       },
-      timeout:3000
+      timeout:10000
     });
   }
 
