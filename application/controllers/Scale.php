@@ -50,7 +50,7 @@ class Scale extends CI_Controller {
 	        }
 	}
 
-	function isJson($string) {
+	public function isJson($string) {
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
@@ -62,22 +62,14 @@ class Scale extends CI_Controller {
 
 	public function put_output(){
 		//In this function we will retrieve the output from the windows software connected to the scale and save it into the temp file we use to communicate with the frontend
-		//$data['weight'] = $_POST['weight'];
-
-
-		echo "this is a put request\n";
     	parse_str(file_get_contents("php://input"),$post_vars);
-    	var_dump($post_vars);
-    	echo $post_vars['weight']." is the fruit\n";
     	$is_number = is_numeric($post_vars['weight']);
-    	if ($is_number)
-    		generate_weight_file($post_vars['weight']);
-    	else
-    		echo "ERROR: scale output received is not numeric";
-		//$json_data = json_encode($data);
-		//var_dump($json_data);
-
-		//Now we copy the data into the file
+    	if ($is_number){
+    		self::generate_weight_file($post_vars['weight']);
+    		echo "200 OK";
+    	} else {
+    		echo "400 Bad Request: scale output received is not numeric";
+    	}
 
 	}
 
