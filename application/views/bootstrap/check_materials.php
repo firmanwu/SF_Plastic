@@ -244,7 +244,7 @@
 
           <!-- Modal 3 -->
           <div class="modal fade" id="printQrCodeModal" tabindex="-1" role="dialog" aria-labelledby="printQrCodeModalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="width:1200px;">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">列印 QR code</h5>
@@ -256,8 +256,49 @@
                   <div class="modal-body">
                     <p>原料的 QR code 及相關資料</p>
                     <br>
-                    <?php QRcode::png('Formula name: Formula 4', 'test.png', 'H', 10, 2);?>
-                    <img src="../test.png" title="qrcode">
+                    <div class="row modal-content" id="printable-area">
+                      <div class="col-sm-6 modal-content qr-code">
+                        <?php 
+                          $material_info_json= $_COOKIE['materialInfo'];
+                          QRcode::png($material_info_json, 'test.png', 'M', 10, 2);
+                        ?>
+                        <img src="../test.png" title="qrcode">
+                      </div>
+                      <div class="col-sm-6 modal-content material-info h-100">
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-name-label">
+                            Material Name:
+                          </div>
+                          <div class="col-sm-6 mat-name-value">
+                            <span class="material_name"></span>
+                          </div>
+                        </div>
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-id-label">
+                            Material Id:
+                          </div>
+                          <div class="col-sm-6 mat-id-value">
+                            <span class="material_id"></span>
+                          </div>
+                        </div>
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-form-amnt-label">
+                            Material Req.Amount:
+                          </div>
+                          <div class="col-sm-6 mat-form-amnt-value">
+                            <span class="amount"></span>
+                          </div>
+                        </div>
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-weight-label">
+                            Weigth Info:
+                          </div>
+                          <div class="col-sm-6 mat-weighst-value">
+                            <span class="weight"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -354,11 +395,25 @@
     });
     $(".confirm-weight-final-btn").on('click', function(){
       confirm_weight(true);
+      var current_row = $("#row-number-hide").val();
+      var textarea_class = '.input-textbox-'+current_row;
+      var material_info = $(textarea_class).val();
+      Cookies.set('materialInfo', material_info);
     });
 
     //Focus the mouse pointer in the text input to ease user handling
     $("#materialCheckModal").on("shown.bs.modal", function(){
         $("#qr-box").get(0).focus();
+    });
+
+    $(".print-qrcode-final").on("click", function(){
+        printElement(document.getElementById("printable-area"));
+        window.print();
+    });
+
+    $( ":button.print-qrcode" ).on("click", function () {
+        
+        fill_out_material_table();
     });
     //Hide non required elements during page loading
     $("#non-match-warning").hide();
@@ -369,6 +424,12 @@
     $(".reset-weight-btn").on("click", function (){
       reset_weight_fields();
     });
+
+    /*$(".print-qrcode").on("click", function (){
+      //
+    });*/
+
+
     $(".reset-btn").prop("disabled", true);
     $(".confirm-btn").prop("disabled", true);
     $(".confirm-weight-btn").prop("disabled", true);
@@ -610,6 +671,35 @@
 
   }
 
+  //Print only passed elements function
+  function printElement(elem) {
+      var domClone = elem.cloneNode(true);
+      
+      var $printSection = document.getElementById("printSection");
+      
+      if (!$printSection) {
+          var $printSection = document.createElement("div");
+          $printSection.id = "printSection";
+          document.body.appendChild($printSection);
+      }
+      
+      $printSection.innerHTML = "";
+      
+      $printSection.appendChild(domClone);
+  }
+
+  function fill_out_material_table (){
+      var current_row = $("#row-number-hide").val();
+      
+      textarea_class = '.input-textbox-'+current_row;
+      var textarea_content = $(textarea_class).val();
+
+      var mat_obj = JSON.parse(textarea_content);
+      $.each(mat_obj, function( index, value ) {
+        //alert( index + ": " + value );
+        $("."+index).text(value);
+      });
+  }
 
 </script>
   
@@ -737,6 +827,33 @@
     }
     .modal-label {
       text-align: left;
+    }
+
+    .mat-info {
+      height: 112px;
+      text-align: left;
+      font-size: 24px;
+    }
+
+    /* Print required elements */
+    @media screen {
+      #printSection {
+          display: none;
+      }
+    }
+
+    @media print {
+      body * {
+        visibility:hidden;
+      }
+      #printSection, #printSection * {
+        visibility:visible;
+      }
+      #printSection {
+        position:absolute;
+        left:0;
+        top:0;
+      }
     }
 
 </style>
