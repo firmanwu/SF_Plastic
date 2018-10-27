@@ -31,7 +31,6 @@ class Daily_orders extends CI_Controller {
 						//$crud->set_relation('ingredient_id', "ingredient",'label');
 
 						$output = $crud->render();
-
 						$this->_example_output($output);
 
                 }catch(Exception $e){

@@ -24,7 +24,6 @@ class Daily_orders_formulas extends CI_Model {
 	        log_message("ERROR", "NEW ARRAY: ".print_r($required_params, true));
             return $query->result();
     }
-	
 }
 
 ?>

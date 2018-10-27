@@ -9,6 +9,9 @@ class Daily_orders_formulas extends CI_Controller {
 		$this->load->database();
 		$this->load->helper('url');
 
+		$this->load->model('materialsformulasmodel');
+		$this->load->model('daily_orders_formulas_model');
+
 		$this->load->library('grocery_CRUD');
 	}
 
@@ -50,7 +53,6 @@ class Daily_orders_formulas extends CI_Controller {
     {
         $this->load->helper('file');
         $this->load->helper('date');
-
         $dateString = '%Y%m%d';
         $time = time();
         $currentDate = mdate($dateString, $time);
@@ -99,12 +101,15 @@ class Daily_orders_formulas extends CI_Controller {
                 $crud->display_as('date', '預定生產日期');
                 $crud->display_as('producedAmount', '爐數');
                 $crud->required_fields('order_id', 'formula_id', 'date', 'producedAmount');
+                $crud->edit_fields('order_id', 'formula_id', 'materialCheck', 'date', 'producedAmount');
+                $crud->fields('order_id', 'formula_id', 'materialCheck', 'date', 'producedAmount');
 
                 $crud->callback_add_field('order_id', function() {
                     $datetime = $this->getSerialNumber();
                     return '<input id="field-order_id" class="form-control" name="order_id" type="text" value=' . $datetime . ' maxlength="255" readonly="yes" />';
                 });
-                $crud->callback_after_insert(array($this, 'increaseSerialNumber'));
+                $crud->callback_after_insert(array($this, 'execute_multi_actions'));
+				//$crud->callback_after_update(array($this,'update_json_check_weight'));
 
                 $output = $crud->render();
                 $this->_example_output($output);
@@ -121,6 +126,59 @@ class Daily_orders_formulas extends CI_Controller {
 
 	public function prepare_materials($key, $row){
 		return site_url('bootstrap?material_id='.$key);
+	}
+
+	public function execute_multi_actions($post_array,$primary_key){
+		$this->increaseSerialNumber();
+		$this->create_default_json_check_weight($post_array,$primary_key);
+		$this->create_default_json_material_info($post_array,$primary_key);
+	}
+
+	function create_default_json_check_weight($post_array,$primary_key){
+		$this->load->model('materialsformulasmodel');
+		$this->load->model('daily_orders_formulas_model');
+
+		$query = $this->materialsformulasmodel->queryMaterialsByFormIdOrderded($post_array["formula_id"]);
+		$new_array =[];
+		foreach ($query as $key => $value) {
+			array_push($new_array, $value['material_id']);
+		}
+
+		$final_array = [];
+		foreach ($new_array as $value) {
+    		$final_array[$value]['checked'] = 99999;
+    		$final_array[$value]['weighted'] = 99999;
+    	}
+
+		$json_result = json_encode($final_array);
+		$this->daily_orders_formulas_model->update_multi_validation_column($json_result,$post_array["order_id"]);
+	}
+
+	function create_default_json_material_info($post_array,$primary_key){
+		$this->load->model('materialsformulasmodel');
+		$this->load->model('daily_orders_formulas_model');
+
+		$query = $this->materialsformulasmodel->queryMaterialsByFormIdOrderded($post_array["formula_id"]);
+		$new_array =[];
+		foreach ($query as $key => $value) {
+			array_push($new_array, $value['material_id']);
+		}
+
+		$final_array = [];
+		foreach ($new_array as $value) {
+    		$final_array[$value]['material_name'] = 99999;
+    		$final_array[$value]['material_id'] = 99999;
+    		$final_array[$value]['amount'] = 99999;
+    		$final_array[$value]['weigth'] = 99999;
+    	}
+
+		$json_result = json_encode($final_array);
+		$this->daily_orders_formulas_model->update_material_info_column($json_result,$post_array["order_id"]);
+	}
+
+	function update_json_check_weight($post_array,$primary_key){
+		log_message( "ERROR", "POST ARRAY: ".print_r($post_array,true));
+		log_message("ERROR","PRIMARY KEY: ".print_r($primary_key,true));
 	}
 
 }
