@@ -1,12 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title><?php echo $page_title; ?></title>
+
+    <!-- Bootstrap -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/jquery/js.cookie.js'); ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/grocery_crud/themes/bootstrap-v4/css/elusive-icons/css/elusive-icons.min.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/bootstrap/css/pe-icon-7-stroke.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo base_url('assets/bootstrap/css/ct-navbar.css'); ?>" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+
 <nav class="navbar navbar-inverse navbar-fixed-top bg-primary text-white">
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
           <div class="col-sm-6">
-            <h3 class="bg-primary text-white">Produce mixture for:  
+            <h3 class="bg-primary text-white">混料前確認作業
           </h3>
           </div>
           <div class="col-sm-6">
-            <button type="button" class="btn back-btn el el-step-backward text-black">Go Back</button>
+            <button type="button" class="btn back-btn el el-step-backward text-black">返回</button>
           </div>
         </div>
       </div>
@@ -19,31 +50,22 @@
 
       <div class="starter-template">
         <div class="row">
-          <div class="col-xs-12 col-md-8 col-sm-6">
-              <p class="text-left">Formula Name: 
+          <div class="col-xs-12 col-md-8 col-sm-6" >
+              <p class="text-left" style="font-size:24px;">配方： 
                 <?php
-                    //$formula_string = json_decode(json_encode($formula_name[0]), true); 
                     $formula_name = json_decode(json_encode($formula_name[0]), true);
                     echo ' '.$formula_name['name'];
-                ?>
-                <br>
-                Formula ID: 
-                <?php
-                    //$formula_string = json_decode(json_encode($formula_name[0]), true);
                     $formula_id = json_decode(json_encode($query_dorder_formula[0]), true);
-                    echo ' '.$formula_id['formula_id'];
                 ?>
-              </p>
-              <p class="lead text-left" style="width: 1100px;">Here the list of materials will be displayed and the operator must process it in the proper way. At this stage the weigth of the materials is the key value. and when all of then are weighted and passed the check, the operator can proceed to mix the materials and confirm manually this step.
               </p>
           </div>
         </div>
           <!-- Dynamic table start -->   
           <div class="row header bg-primary text-white" style="boder: black solid 2px;">
-            <div class="col-sm-4 text-weight-bold" style="font-size:24px;">Material</div>
-            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">Actions</div>
-            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">Input read</div>
-            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">Status</div>
+            <div class="col-sm-4 text-weight-bold" style="font-size:24px;">原料</div>
+            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">執行項目</div>
+            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">QR code 讀取內容</div>
+            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">確認結果</div>
           </div>
           <?php
             $row_number=0;
@@ -55,7 +77,23 @@
                   $array = json_decode(json_encode($row),true);
                   $param_number=0;
                    foreach ($array as $key => $value) {
-                        
+                        switch($key) {
+                            case "label":
+                                $key = "原料名稱";
+                                break;
+                            case "material_id":
+                                $key = "原料編號";
+                                break;
+                            case "weight":
+                                $key = "所需重量";
+                                break;
+                            case "order":
+                                $key = "混料順序";
+                                break;
+                            default:
+                                break;
+                        }
+
                         echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
                         echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                         echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
@@ -65,15 +103,15 @@
                    echo '</div>';
                    echo '<div class="col-sm-2 text-center border-right"> 
                                 <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
-                                  Check Material
+                                  原料確認
                                 </button>
                                 <p></p>
-                                <button type="button" class="btn btn-primary mat-weight check-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
-                                  Weight Material
-                                </button>
+                                <!-- <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
+                                  原料秤重
+                                </button> -->
                         </div>';
                    echo '<div class="col-sm-4 text-center border-right"> 
-                                <textarea class="input-textbox-'.$row_number.'" placeholder="QR code information after read" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
+                                <textarea class="input-textbox-'.$row_number.'" placeholder="從 QR code 讀取到的內容" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
                         </div>';
                    echo '<div class="col-sm-2 text-center"> 
                             <div class="led-red-box-'.$row_number.' align-middle">
@@ -82,6 +120,12 @@
                             <div class="led-green-box-'.$row_number.' align-middle" style="vertical-align:middle;">
                               <div class="led-green"></div>
                             </div>
+                            <div class="print-qrcode-'.$row_number.' align-middle" style="vertical-align:middle;">
+                            <br>
+                              <!-- <button type="button" class="btn btn-primary print-qrcode print-qrcode-button-'.$row_number.'" data-toggle="modal" data-target="#printQrCodeModal">
+                                  列印 QR code
+                                </button> -->
+                            </div>
                         </div>';                        
                //}
                echo '</div>';
@@ -89,55 +133,55 @@
             }
           ?>
           <br>
-          <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>Confirm Order</button>
-          <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled>Print</button>
+          <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>完成混料前確認</button>
+          <button type="button" class="btn btn-primary print-btn-global text-rigth el el-print el-lg" disabled> 列印</button>
 
 
-          <!-- Modal for material check -->
+          <!-- Modal 1 -->
           <div class="modal fade" id="materialCheckModal" tabindex="-1" role="dialog" aria-labelledby="materialCheckModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Check Material</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">秤重前原料確認</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>Please, put the material in the scale and input the read value</p>
+                    <p>請使用 QR code 掃描器讀取資料</p>
                     <br>
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Name: </label>
+                          <div class="col-sm-6">
+                            <label>原料名稱</label>
                           </div> 
-                          <div class="col-sm-9">
+                          <div class="col-sm-6">
                             <div class="material-label float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Id: </label>
+                        <div class="row modal-label" style="display: none;">
+                          <div class="col-sm-6">
+                            <label>所需重量</label>
                           </div> 
-                          <div class="col-sm-9">
+                          <div class="col-sm-6">
                             <div class="material-id float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
+                        <div class="row modal-label" style="display: none;">
+                          <div class="col-sm-6">
                             <label>Amount: </label>
                           </div> 
                           <div class="col-sm-9">
                             <div class="material-amount float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Sort: </label>
+                        <div class="row modal-label" style="display: none;">
+                          <div class="col-sm-6">
+                            <label>混料順序</label>
                           </div> 
-                          <div class="col-sm-9">
+                          <div class="col-sm-6">
                             <div class="material-sort float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
@@ -146,7 +190,7 @@
                       <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-12"> 
-                            <input type="text" id="qr-box" placeholder="Place the cursor here and read the qrcode">
+                            <input type="text" id="qr-box" placeholder="請點選這裡再掃描 QR code">
                           </div>
                         </div>
                         <div class="row row-qr-name" style="display: none;">
@@ -175,113 +219,133 @@
                         </div>
                       </div>
                     </div>
-                    <small id="match-warning" style="color: green; font-weight: bold;">Order requirements are matched. Proceed to confirm</small>
-                    <small id="non-match-warning" style="color: red; font-weight: bold;">One or more elements don't match with the order requirements</small>
+                    <small id="match-warning" style="color: green; font-weight: bold;">原料正確，請秤重</small>
+                    <small id="non-match-warning" style="color: red; font-weight: bold;">原料錯誤，請再次確認</small>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn reset-btn">Reset</button>
-                  <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
+                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
+                  <button type="button" class="btn reset-btn">重置</button>
+                  <button type="button" class="btn btn-primary confirm-btn">確認</button>
+                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Modal for material weigthing step-->
+
+
+          <!-- Modal 2 -->
           <div class="modal fade" id="materialWeightModal" tabindex="-1" role="dialog" aria-labelledby="materialWeightModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Weight Material</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">原料秤重</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>Please, put the material in the scale and input the read value</p>
+                    <p>請等待電子磅秤傳送資料</p>
                     <br>
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Name: </label>
-                          </div> 
-                          <div class="col-sm-9">
-                            <div class="material-label float-left" style="text-align:left;"></div>
-                          </div> 
-                        </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Id: </label>
-                          </div> 
-                          <div class="col-sm-9">
-                            <div class="material-id float-left" style="text-align:left;"></div>
-                          </div> 
-                        </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Amount: </label>
-                          </div> 
-                          <div class="col-sm-9">
-                            <div class="material-amount float-left" style="text-align:left;"></div>
-                          </div> 
-                        </div>
-                        <div class="row modal-label">
-                          <div class="col-sm-3">
-                            <label>Sort: </label>
-                          </div> 
-                          <div class="col-sm-9">
-                            <div class="material-sort float-left" style="text-align:left;"></div>
-                          </div> 
-                        </div>
-                        <input type="hidden" id="row-number-hide" value="">
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="row">
-                          <div class="col-sm-12"> 
-                            <input type="text" id="qr-box" placeholder="Place the cursor here and read the qrcode">
-                          </div>
-                        </div>
-                        <div class="row row-qr-name" style="display: none;">
                           <div class="col-sm-6">
-                            <label id="label-name">Name: </label>
-                          </div>
+                            <label>所需重量</label><span name="weight-req" id="weight-req" > </span>
+                          </div> 
                           <div class="col-sm-6">
-                            <span name="material-name-hidden" id="material-name-hidden"> </span>
-                          </div>
-                        </div>
-                        <div class="row row-qr-id" style="display: none;">
-                          <div class="col-sm-6">
-                            <label id="label-id">Id: </label>
-                          </div>
-                          <div class="col-sm-6">
-                            <span name="material-id-hidden" id="material-id-hidden"> </span>
-                          </div>
-                        </div>
-                        <div class="row row-qr-amount" style="display: none;">
-                          <div class="col-sm-6">
-                            <label id="label-amount"> Amount: </label>
-                          </div>
-                          <div class="col-sm-6">
-                            <span name="amount-hidden" id="amount-hidden" > </span>
-                          </div>
+                            <input type="text" id="hide-weight" value="">
+                          </div> 
                         </div>
                       </div>
                     </div>
-                    <small id="match-warning" style="color: green; font-weight: bold;">Order requirements are matched. Proceed to confirm</small>
-                    <small id="non-match-warning" style="color: red; font-weight: bold;">One or more elements don't match with the order requirements</small>
                   </div>
+                  <small id="match-weight-warning" style="color: green; font-weight: bold;">原料重量符合配方要求，請按確認鍵完成動作</small>
+                  <small id="non-match-weight-warning" style="color: red; font-weight: bold;">原料重量不符合配方要求</small>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn reset-btn">Reset</button>
-                  <button type="button" class="btn btn-primary confirm-btn">Confirm</button>
+                  <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
+                  <button type="button" class="btn reset-weight-btn">重置</button>
+                  <button type="button" class="btn btn-primary confirm-weight-final-btn">確認</button>
                 </div>
               </div>
             </div>
           </div>
+
+
+
+          <!-- Modal 3 -->
+          <div class="modal fade" id="printQrCodeModal" tabindex="-1" role="dialog" aria-labelledby="printQrCodeModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="width:1200px;">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">列印 QR code</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="container" style="width: auto;">
+                  <div class="modal-body">
+                    <p>原料的 QR code 及相關資料</p>
+                    <br>
+                    <div class="row modal-content" id="printable-area">
+                      <div class="col-sm-6 modal-content qr-code">
+                        <?php 
+                          $material_info_json= $_COOKIE['materialInfo'];
+                          QRcode::png($material_info_json, 'test.png', 'M', 10, 2);
+                        ?>
+                        <img src="../test.png" title="qrcode">
+                      </div>
+                      <div class="col-sm-6 modal-content material-info h-100">
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-name-label">
+                            Material Name:
+                          </div>
+                          <div class="col-sm-6 mat-name-value">
+                            <span class="material_name"></span>
+                          </div>
+                        </div>
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-id-label">
+                            Material Id:
+                          </div>
+                          <div class="col-sm-6 mat-id-value">
+                            <span class="material_id"></span>
+                          </div>
+                        </div>
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-form-amnt-label">
+                            Material Req.Amount:
+                          </div>
+                          <div class="col-sm-6 mat-form-amnt-value">
+                            <span class="amount"></span>
+                          </div>
+                        </div>
+                        <div class="row mat-info">
+                          <div class="col-sm-6 mat-weight-label">
+                            Weigth Info:
+                          </div>
+                          <div class="col-sm-6 mat-weighst-value">
+                            <span class="weight"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary print-qrcode-final">列印 QR code</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+       <!--  <iframe style="border:0; background:#e8f7ff;width:100%;height:300px" src="http://sf_plastic.test:8888/qrcodepage">  
+        </iframe> -->
+          
         
       </div>
       
@@ -290,26 +354,33 @@
 <script type="text/javascript">
   $(document).ready(function () {
     //Initially we hide the green leds if processed attribute in the DB is 0 (not processed)
-    var processed = '<?php echo $formula_id["processed"]?>';
+    var processed = '<?php echo $formula_id["materialCheck"]?>';
     if ( processed === '0'){
       $("[class^=led-green-box-").hide();
+      $(".print-qrcode").prop('disabled', true);
+      $(".mat-weight").prop('disabled', true);
+      $(".mat-weight").prop('title', "Material not checked");
     } else {
       $("[class^=led-red-box-").hide();
       $(".mat-check").prop('disabled', true);
       $(".mat-check").prop('title', "Material already checked");
+      $(".mat-weight").prop('disabled', false);
+      $(".mat-weight").prop('title', "Material ready to be weigthed");
       $(".confirm-btn-global").prop("disabled", true);
       $(".confirm-btn-global").prop("title", "Order already confirmed");
       $(".print-btn-global").prop("disabled", false);
 
     }
-
+    //Hide weigth input field
+    $("#hide-weight").hide();
     //Show info when user click on button to check materials
-    $( ":button.mat-check, :button.mat-weight" ).on("click", function () {
+    $( ":button.mat-check" ).on("click", function () {
       $("#non-match-warning").hide();
       $("#match-warning").hide();
       $('#material-name-hidden').css({"background-color":"white"});
       $('#material-id-hidden').css({"background-color":"white"});
       $('#amount-hidden').css({"background-color":"white"});
+      $('#hide-weight').css({"background-color":"white"});
 
      var row_button_classes = $(this).attr("class").split(" ");
      var last_button_class = row_button_classes[row_button_classes.length-1];
@@ -333,15 +404,50 @@
      //store row number into hidden input to be able to modify leds
      $("#row-number-hide").val(row_number_for_class);  
     });
+    //Show info when user click on button to check materials
+    $( ":button.mat-weight" ).on("click", function () {
+      $("#non-match-weight-warning").hide();
+      $("#match-weight-warning").hide();
+      $("#weight-req").text($("#amount-hidden").text());
+      check_weight_output();
+      //confirm_material(false);
+      $("#materialWeightModal").modal('toggle');
+    });
 
     //Event on click for Confirm correct data in modal window
     $(".confirm-btn").on('click', function(){
-      confirm_material();
+      confirm_material(true);
+    });
+    $(".confirm-weight-btn").on('click', function(){
+      $("#non-match-weight-warning").hide();
+      $("#match-weight-warning").hide();
+      $("#weight-req").text($("#amount-hidden").text());
+      check_weight_output();
+      confirm_material(false);
+      $("#materialCheckModal").modal('toggle');
+      $("#materialWeightModal").modal('toggle');
+    });
+    $(".confirm-weight-final-btn").on('click', function(){
+      confirm_weight(true);
+      var current_row = $("#row-number-hide").val();
+      var textarea_class = '.input-textbox-'+current_row;
+      var material_info = $(textarea_class).val();
+      Cookies.set('materialInfo', material_info);
     });
 
     //Focus the mouse pointer in the text input to ease user handling
     $("#materialCheckModal").on("shown.bs.modal", function(){
         $("#qr-box").get(0).focus();
+    });
+
+    $(".print-qrcode-final").on("click", function(){
+        printElement(document.getElementById("printable-area"));
+        window.print();
+    });
+
+    $( ":button.print-qrcode" ).on("click", function () {
+        
+        fill_out_material_table();
     });
     //Hide non required elements during page loading
     $("#non-match-warning").hide();
@@ -349,8 +455,18 @@
     $(".reset-btn").on("click", function (){
       reset_check_fields();
     });
+    $(".reset-weight-btn").on("click", function (){
+      reset_weight_fields();
+    });
+
+    /*$(".print-qrcode").on("click", function (){
+      //
+    });*/
+
+
     $(".reset-btn").prop("disabled", true);
     $(".confirm-btn").prop("disabled", true);
+    $(".confirm-weight-btn").prop("disabled", true);
 
     //setup before functions
     var typingTimer;                //timer identifier
@@ -382,8 +498,8 @@
       $('#amount-hidden').text(qr_object.amount);
 
       $('.row-qr-name').show();
-      $('.row-qr-id').show();
-      $('.row-qr-amount').show();
+      //$('.row-qr-id').show();
+      //$('.row-qr-amount').show();
       $('#qr-box').hide();
 
       compare();
@@ -418,10 +534,12 @@
         $("#non-match-warning").show();
         $(".reset-btn").prop("disabled", false);
         $(".confirm-btn").prop("disabled", true);
+        $(".confirm-weight-btn").prop("disabled", true);
       } else {
         $("#match-warning").show();
         $(".reset-btn").prop("disabled", false);
         $(".confirm-btn").prop("disabled", false);
+        $(".confirm-weight-btn").prop("disabled", false);
       }
     }
 
@@ -443,11 +561,20 @@
       $('#qr-box').show();
       $(".reset-btn").prop("disabled", true);
       $(".confirm-btn").prop("disabled", true);
+      $(".confirm-weight-btn").prop("disabled", true);
 
       $("#qr-box").get(0).focus();
     }
 
-    function confirm_material(){
+    function reset_weight_fields(){
+      $(".confirm-weight-final-btn").prop("disabled", true);
+      $("#hide-weight").val("");
+      $("#hide-weight").hide();
+      $('#hide-weight').css({"background-color":"white"});
+      check_weight_output();
+    }
+
+    function confirm_material(close_modal){
       var current_row = $("#row-number-hide").val();
       var qr_data = $("#qr-box").val();
       if (qr_data.indexOf('http') != -1){
@@ -457,11 +584,37 @@
       $(textarea_class).val(qr_data);
       $(".led-green-box-"+current_row).show();
       $(".led-red-box-"+current_row).hide();
-      
+
+      //Enable Weight-button
+      $(".weight-button-"+current_row).prop("disabled", false);
       //Prettify textarea content
       prettyPrint(textarea_class);
       //Close modal window
-      $(".modal").modal('toggle');
+      if (close_modal)
+        $("#materialCheckModal").modal('toggle');
+    }
+
+    function confirm_weight(close_var){
+
+      var current_row = $("#row-number-hide").val();
+      //enable print qrcode for that row
+      $(".print-qrcode-button-"+current_row).prop('disabled', false);
+      //Add json info to textarea
+      var scale_weight = $("#hide-weight").val();
+      var json_weight = ', "weight":"'+scale_weight+'"}';
+      
+      textarea_class = '.input-textbox-'+current_row;
+      var textarea_content = $(textarea_class).val();
+      var sliced_textarea = textarea_content.slice(0,-2);
+      $(textarea_class).val(sliced_textarea+json_weight);
+      //$(".led-green-box-"+current_row).show();
+      //$(".led-red-box-"+current_row).hide();
+
+      //Prettify textarea content
+      prettyPrint(textarea_class);
+      //Close modal window
+      $("#materialWeightModal").modal('toggle');
+
     }
 
     //On Go back event
@@ -484,6 +637,103 @@
       $(textarea_id).val(pretty);
   }
 
+  function check_weight_output() {
+    var request = null;
+    request = $.ajax({
+      url: '../scale/get_output',
+      type: 'POST',
+      tryCount: 0,
+      retryLimit: 30,
+      async: true,
+      beforeSend: function() {
+        if (request != null){
+          request.abort();
+        }
+      },
+      error: function (jqXHR, textStatus){
+        if (textStatus === 'timeout' || textStatus === 'error') {
+          var error_msg = "讀取不到電子磅秤傳送來的資料。請再秤重一次或是手動輸入秤重結果";
+          console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
+          this.tryCount++;
+          if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+          }
+          $("#hide-weight").show();
+          return;
+        }
+      },
+      success: function (data){
+        console.log("Scale output retrieved");
+        //Reset counter if previous request failed
+        $("#hide-weight").show();
+        //var json_string = JSON.stringify(data)
+        data = data.replace(/\s/g,'');
+        var obj = JSON.parse(data);
+        $("#hide-weight").val(obj.weight);
+        if (this.tryCount !== 0) {
+          this.tryCount = 0;
+        }
+        compare_weights();
+      },
+      timeout:10000
+    });
+  }
+
+  function compare_weights(){
+    var formula_weight = $("#amount-hidden").text();
+    var scale_weight = $("#hide-weight").val();
+    var non_match = [];
+
+    var comparison_result = formula_weight.localeCompare(scale_weight);
+
+    if (comparison_result !== 0) non_match.push("Weight");
+
+    if (non_match.length !== 0) {
+      //alert("Non matching elements: "+JSON.stringify(non_match));
+      if (non_match.includes("Weight")) $('#hide-weight').css({"background-color":"red"});
+      $("#non-match-weight-warning").show();
+      $("#match-weight-warning").hide();
+      $(".reset-weight-btn").prop("disabled", false);
+      $(".confirm-weight-final-btn").prop("disabled", true);
+    } else {
+      $("#match-weight-warning").show();
+      $("#non-match-weight-warning").hide();
+      $(".reset-weight-btn").prop("disabled", false);
+      $(".confirm-weight-final-btn").prop("disabled", false);
+    }
+
+  }
+
+  //Print only passed elements function
+  function printElement(elem) {
+      var domClone = elem.cloneNode(true);
+      
+      var $printSection = document.getElementById("printSection");
+      
+      if (!$printSection) {
+          var $printSection = document.createElement("div");
+          $printSection.id = "printSection";
+          document.body.appendChild($printSection);
+      }
+      
+      $printSection.innerHTML = "";
+      
+      $printSection.appendChild(domClone);
+  }
+
+  function fill_out_material_table (){
+      var current_row = $("#row-number-hide").val();
+      
+      textarea_class = '.input-textbox-'+current_row;
+      var textarea_content = $(textarea_class).val();
+
+      var mat_obj = JSON.parse(textarea_content);
+      $.each(mat_obj, function( index, value ) {
+        //alert( index + ": " + value );
+        $("."+index).text(value);
+      });
+  }
 
 </script>
   
@@ -609,9 +859,42 @@
     div[class^="value-"], div[class*=" value-"] {
       text-align: left;
     }
-
     .modal-label {
       text-align: left;
     }
 
+    .mat-info {
+      height: 112px;
+      text-align: left;
+      font-size: 24px;
+    }
+
+    /* Print required elements */
+    @media screen {
+      #printSection {
+          display: none;
+      }
+    }
+
+    @media print {
+      body * {
+        visibility:hidden;
+      }
+      #printSection, #printSection * {
+        visibility:visible;
+      }
+      #printSection {
+        position:absolute;
+        left:0;
+        top:0;
+      }
+    }
+
 </style>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="<?php echo base_url('assets/bootstrap/js/bootstrap.js'); ?>"></script>
+
+<script src="<?php echo base_url('assets/bootstrap/js/ct-navbar.js'); ?>"></script>
+</body>
+</html>
