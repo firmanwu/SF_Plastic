@@ -1,34 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title><?php echo $page_title; ?></title>
-
-    <!-- Bootstrap -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
-    <script src="<?php echo base_url('assets/jquery/js.cookie.js'); ?>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/grocery_crud/themes/bootstrap-v4/css/elusive-icons/css/elusive-icons.min.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/bootstrap/css/pe-icon-7-stroke.css'); ?>" rel="stylesheet" />
-    <link href="<?php echo base_url('assets/bootstrap/css/ct-navbar.css'); ?>" rel="stylesheet" />
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-
-
-
 <nav class="navbar navbar-inverse navbar-fixed-top bg-primary text-white">
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
@@ -56,6 +25,12 @@
                     $formula_name = json_decode(json_encode($formula_name[0]), true);
                     echo ' '.$formula_name['name'];
                     $formula_id = json_decode(json_encode($query_dorder_formula[0]), true);
+                    log_message("ERROR","FORMULA ID ARRAY: ".print_r($formula_id,true));
+                    $material_info_stdclass = json_decode($formula_id['material_info']);
+                    $material_info_array = json_decode(json_encode($material_info_stdclass), true);
+
+                    $multi_validation_stdclass = json_decode($formula_id['multi_validation']);
+                    $multi_validation_array = json_decode(json_encode($multi_validation_stdclass), true);
                 ?>
               </p>
           </div>
@@ -69,68 +44,68 @@
           </div>
           <?php
             $row_number=0;
-            foreach ($query as $row) {
-               echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black; border-left: solid black 2px; border-right: solid black; border-bottom: solid black 2px; padding: 10px;">';
-               //$i=0;
-               //for ($i=0; $i<=2; $i++){
-                  echo '<div class="col-sm-4 test-weight-bold" style="font-size:24px; boder-right:solid black;">';
-                  $array = json_decode(json_encode($row),true);
-                  $param_number=0;
-                   foreach ($array as $key => $value) {
-                        switch($key) {
-                            case "label":
-                                $key = "原料名稱";
-                                break;
-                            case "material_id":
-                                $key = "原料編號";
-                                break;
-                            case "weight":
-                                $key = "所需重量";
-                                break;
-                            case "order":
-                                $key = "混料順序";
-                                break;
-                            default:
-                                break;
-                        }
+                log_message("ERROR", "QUERY CONTENT: ".print_r($query,true));
+                foreach ($query as $row) {
+                 log_message("ERROR","FORMULA MATERIAL DATA: ".print_r($row,true));
+                 $row_array = json_decode(json_encode($row), true);
+                 echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black; border-left: solid black 2px; border-right: solid black; border-bottom: solid black 2px; padding: 10px;">';
+                 echo '<div class="col-sm-4 test-weight-bold" style="font-size:24px; boder-right:solid black;">';
+                 $param_number=0;
+                 foreach ($row_array as $key => $value) {
+                  switch($key) {
+                    case "label":
+                    $key = "原料名稱";
+                    break;
+                    case "weight":
+                    $key = "所需重量";
+                    break;
+                    case "order":
+                    $key = "混料順序";
+                    break;
+                    default:
+                    break;
+                  }
 
-                        echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
-                        echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
-                        echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
-                        echo '</div>';
-                        $param_number++;
-                   }
-                   echo '</div>';
-                   echo '<div class="col-sm-2 text-center border-right"> 
-                                <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
-                                  原料確認
-                                </button>
-                                <p></p>
-                                <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
-                                  原料秤重
-                                </button>
-                        </div>';
-                   echo '<div class="col-sm-4 text-center border-right"> 
-                                <textarea class="input-textbox-'.$row_number.'" placeholder="從 QR code 讀取到的內容" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
-                        </div>';
-                   echo '<div class="col-sm-2 text-center"> 
-                            <div class="led-red-box-'.$row_number.' align-middle">
-                              <div class="led-red"></div>
-                            </div>
-                            <div class="led-green-box-'.$row_number.' align-middle" style="vertical-align:middle;">
-                              <div class="led-green"></div>
-                            </div>
-                            <div class="print-qrcode-'.$row_number.' align-middle" style="vertical-align:middle;">
-                            <br>
-                              <button type="button" class="btn btn-primary print-qrcode print-qrcode-button-'.$row_number.'" data-toggle="modal" data-target="#printQrCodeModal">
-                                  列印 QR code
-                                </button>
-                            </div>
-                        </div>';                        
-               //}
-               echo '</div>';
-               $row_number++;
-            }
+                  echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
+                  echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
+                  echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
+                  if($key == 'material_id'){
+                    echo "<div id='material-check-id' class='material-check-id-".$value." ".$row_number."' style='display:none;'>".$value."</div>";
+                  }
+                  echo '</div>';
+                  $param_number++;
+                }
+                echo '</div>';
+                echo '<div class="col-sm-2 text-center border-right"> 
+                <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
+                原料確認
+                </button>
+                <p></p>
+                <button type="button" class="btn btn-primary mat-weight weight-button-'.$row_number.'" data-toggle="modal" data-target="#materialWeightModal">
+                原料秤重
+                </button>
+                </div>';
+                echo '<div class="col-sm-4 text-center border-right"> 
+                <textarea class="input-textbox-'.$row_number.'" placeholder="從 QR code 讀取到的內容" rows="10" columns="70" disabled style="width:300px;height:100px">'.json_encode($material_info_array[$row_array['material_id']]).'</textarea>
+                </div>';
+                echo '<div class="col-sm-2 text-center"> 
+                <div class="led-red-box-'.$row_number.' align-middle">
+                <div class="led-red"></div>
+                </div>
+                <div class="led-green-box-'.$row_number.' align-middle" style="vertical-align:middle;">
+                <div class="led-green"></div>
+                </div>
+                <div class="print-qrcode-'.$row_number.' align-middle" style="vertical-align:middle;">
+                <br>
+                <button type="button" class="btn btn-primary print-qrcode print-qrcode-button-'.$row_number.'" data-toggle="modal" data-target="#printQrCodeModal">
+                列印 QR code
+                </button>
+                </div>
+                </div>';                        
+               
+                echo '</div>';
+                $row_number++;
+              }
           ?>
           <br>
           <button type="button" class="btn btn-primary confirm-btn-global text-rigth" disabled>完成原料準備</button>
@@ -360,6 +335,16 @@
       $(".print-qrcode").prop('disabled', true);
       $(".mat-weight").prop('disabled', true);
       $(".mat-weight").prop('title', "Material not checked");
+
+      var json_multi_validation = '<?php echo $formula_id["multi_validation"]?>';
+      var json_material_info = '<?php echo $formula_id["material_info"]?>';
+      //We proceed to check the status of the two validation steps: check material and weight it
+      var array_multi_validation = JSON.parse(json_multi_validation);
+      var array_material_info = JSON.parse(json_material_info);
+      //var test_value = array_multi_validation[1].checked;
+      check_material_info(array_material_info);
+      check_validation_status(array_multi_validation);
+
     } else {
       $("[class^=led-red-box-").hide();
       $(".mat-check").prop('disabled', true);
@@ -371,6 +356,12 @@
       $(".print-btn-global").prop("disabled", false);
 
     }
+    //Prettify textareas contents
+    $('textarea').each(function(){
+       var pretty_data = prettyPrint_data(this.value); 
+       this.value = pretty_data;
+    });
+
     //Hide weigth input field
     $("#hide-weight").hide();
     //Show info when user click on button to check materials
@@ -408,6 +399,18 @@
     $( ":button.mat-weight" ).on("click", function () {
       $("#non-match-weight-warning").hide();
       $("#match-weight-warning").hide();
+      //If the material has been checked and stored in DB so the user goes directly to weight process. Amount-hidden must be fill out with DB info before check scale output
+      if (isEmptyOrSpaces($("#amount-hidden").text())){
+        //We need to get row and material id to fill out the info
+        console.log("MATERIAL WEIGHT BUTTON: "+this); 
+        var current_row_class = this.classList[3];
+        var current_row_class_splitted = current_row_class.split('-');
+        var current_row = current_row_class_splitted[2];
+        var material_id = $("#material-check-id."+current_row).text();
+        //Fill out amount-hidden field
+        var material_amount = get_material_object_by_index(material_id, array_material_info);
+        $("#amount-hidden").text(material_amount);
+      }
       $("#weight-req").text($("#amount-hidden").text());
       check_weight_output();
       //confirm_material(false);
@@ -637,6 +640,17 @@
       $(textarea_id).val(pretty);
   }
 
+  function prettyPrint_data(textarea_data) {
+      var ugly = textarea_data;
+      var obj = JSON.parse(ugly);
+      var pretty = JSON.stringify(obj, undefined, 4);
+      return pretty;
+  }
+
+  function isEmptyOrSpaces(str){
+      return str === null || str.match(/^ *$/) !== null;
+  }
+
   function check_weight_output() {
     var request = null;
     request = $.ajax({
@@ -732,6 +746,65 @@
       $.each(mat_obj, function( index, value ) {
         //alert( index + ": " + value );
         $("."+index).text(value);
+      });
+  }
+
+  function get_material_object_by_index(material_id, array_material_info){
+    var material_amount ={};
+    $.each(array_material_info, function(i,obj){
+      if (material_id == i){
+        material_amount = obj.amount;
+        return false;
+      }
+    });
+    return material_amount;
+  }
+
+  function check_material_info(array_materials_info){
+    //We fill out hidden fields if material was already checked and/or weighted
+    $.each(array_materials_info, function(i, obj) {
+
+    });
+  }
+
+  function initialize_hidden_fields(materials_info){
+    $("#amount-hidden").text();
+  }
+
+  function check_validation_status (materials_validation_info){
+      $("[class^=material-check-id-").each(function(i, obj) {
+        //One by one we check the material check status and the weight status
+        //We extract required information from current element, material_id and row
+        var material_id = this.innerText;
+        var class_list_obj = this.className;
+        var class_list = class_list_obj.split(/\s+/);
+        var row = class_list[1];
+        var checked_status ={};
+        var weighted_status = {};
+        //We need to get the validation information of the material_id retrieved
+        $.each(materials_validation_info, function(i,obj){
+          if (material_id == i){
+            checked_status = obj.checked;
+            weighted_status = obj.weighted;
+            return false;
+          }
+        });
+        //Now we can show and hide elements depending on the retrieved results  
+        if (checked_status == 1 && weighted_status == 1){
+          //With the row value we proceed to update buttons and leds
+          $(".led-green-box-"+row).show();
+          $(".led-red-box-"+row).hide();
+          $(".print-qrcode-button-"+row).prop('disabled', false);
+          $(".weight-button-"+row).prop('disabled', false);
+          $(".weight-button-"+row).prop('title', "Material checked");
+        } else if (checked_status == 1 && weighted_status != 1){
+          //With the row value we proceed to update buttons and leds
+          $(".led-green-box-"+row).show();
+          $(".led-red-box-"+row).hide();
+          $(".print-qrcode-button-"+row).prop('disabled', true);
+          $(".weight-button-"+row).prop('disabled', false);
+          $(".weight-button-"+row).prop('title', "Material checked");
+        }
       });
   }
 
@@ -891,10 +964,3 @@
     }
 
 </style>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="<?php echo base_url('assets/bootstrap/js/bootstrap.js'); ?>"></script>
-
-<script src="<?php echo base_url('assets/bootstrap/js/ct-navbar.js'); ?>"></script>
-</body>
-</html>
