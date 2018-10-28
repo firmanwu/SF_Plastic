@@ -9,6 +9,7 @@ Please, focus on the code for prototype purpose:
 * plastic_sf.sql : DB, contains examples tables for grocery crud module and a formulas specific table for the prototype
 
 This  prototype uses Grocery CRUD.
+
 IMPORTANT TIPS
 --------------
 How to test Material check without the qrcode reader:
