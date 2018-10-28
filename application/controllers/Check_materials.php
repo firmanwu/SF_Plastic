@@ -17,8 +17,8 @@ class Check_materials extends CI_Controller {
 		$data['query'] = $this->materials->get_formula_materials_sorted($formula_info['formula_id']);
 		$data['formula_name'] = $this->materials->get_formula_name_from_id($formula_info['formula_id']);	
 		$data['page_title'] = '原料準備作業';
-		$this->load->view('layout/header.php', $data);
+		//$this->load->view('layout/header.php', $data);
 		$this->load->view('bootstrap/check_materials.php', $data);
-		$this->load->view('layout/footer.php', $data);
+		//$this->load->view('layout/footer.php', $data);
 	}
 }
