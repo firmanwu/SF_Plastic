@@ -17,6 +17,23 @@ class Daily_orders_formulas_model extends CI_Model {
         $this->db->where('order_id', $primary_key);
         $this->db->update('formula_daily_order', $data);
     }
+
+    public function get_multi_validation_data ($primary_key){
+        $this->db->select('multi_validation');
+        $this->db->where('order_id', $primary_key);
+        $result = $this->db->get('formula_daily_order');
+
+        return $result->row_array();
+    }
+
+    public function get_material_info_data ($primary_key){
+        
+        $this->db->select('material_info');
+        $this->db->where('order_id', $primary_key);
+        $result = $this->db->get('formula_daily_order');
+
+        return $result->row_array();
+    }
 	
 }
 

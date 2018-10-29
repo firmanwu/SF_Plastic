@@ -172,7 +172,7 @@ class Daily_orders_formulas extends CI_Controller {
     		$final_array[$value]['material_name'] = 99999;
     		$final_array[$value]['material_id'] = 99999;
     		$final_array[$value]['amount'] = 99999;
-    		$final_array[$value]['weigth'] = 99999;
+    		$final_array[$value]['weight'] = 99999;
     	}
 
 		$json_result = json_encode($final_array);

@@ -338,13 +338,17 @@
 
       var json_multi_validation = '<?php echo $formula_id["multi_validation"]?>';
       var json_material_info = '<?php echo $formula_id["material_info"]?>';
-      //We proceed to check the status of the two validation steps: check material and weight it
-      var array_multi_validation = JSON.parse(json_multi_validation);
-      var array_material_info = JSON.parse(json_material_info);
-      //var test_value = array_multi_validation[1].checked;
-      check_material_info(array_material_info);
-      check_validation_status(array_multi_validation);
-
+      var order_id = '<?php echo $formula_id["order_id"]?>';
+      if (!isEmptyOrSpaces(json_multi_validation)){
+        //We proceed to check the status of the two validation steps: check material and weight it
+        var array_multi_validation = JSON.parse(json_multi_validation);
+        check_validation_status(array_multi_validation);
+        
+        if (!isEmptyOrSpaces(json_material_info)){
+          var array_material_info = JSON.parse(json_material_info);
+          check_material_info(array_material_info);
+        }
+      }
     } else {
       $("[class^=led-red-box-").hide();
       $(".mat-check").prop('disabled', true);
@@ -526,8 +530,8 @@
       var amount_check = order_amount.localeCompare(qr_amount);
 
       if (material_name_check !== 0) non_match.push("Material Label");
-      if (material_id_check !== 0) non_match.push("Material Id");
-      if (amount_check !== 0) non_match.push("Amount");
+      //if (material_id_check !== 0) non_match.push("Material Id");
+      //if (amount_check !== 0) non_match.push("Amount");
 
       if (non_match.length !== 0) {
         //alert("Non matching elements: "+JSON.stringify(non_match));
@@ -580,18 +584,25 @@
     function confirm_material(close_modal){
       var current_row = $("#row-number-hide").val();
       var qr_data = $("#qr-box").val();
+      console.log(qr_data);
       if (qr_data.indexOf('http') != -1){
         qr_data = qr_data.substring(7,qr_data.length);
       }
       textarea_class = '.input-textbox-'+current_row;
-      $(textarea_class).val(qr_data);
+      // Save into DB material information and update validation of check material
+      var json_validation = {"checked":1, "weighted":99999};
+      //We add default value for non weight data
+      var json_material_info = qr_data;
+      update_material_check_validation(json_validation, json_material_info, order_id);
+
+      //$(textarea_class).val(qr_data);
       $(".led-green-box-"+current_row).show();
       $(".led-red-box-"+current_row).hide();
 
       //Enable Weight-button
       $(".weight-button-"+current_row).prop("disabled", false);
       //Prettify textarea content
-      prettyPrint(textarea_class);
+      //prettyPrint(textarea_class);
       //Close modal window
       if (close_modal)
         $("#materialCheckModal").modal('toggle');
@@ -689,6 +700,51 @@
           this.tryCount = 0;
         }
         compare_weights();
+      },
+      timeout:10000
+    });
+  }
+
+  function update_material_check_validation(json_validation, json_material_info, order_id) {
+    var request = null;
+    var json_array = [json_validation, json_material_info, order_id];
+    request = $.ajax({
+      url: 'update_validation_info',
+      type: 'POST',
+      data:{info: JSON.stringify(json_array)},
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      tryCount: 0,
+      retryLimit: 30,
+      async: true,
+      beforeSend: function() {
+        if (request != null){
+          request.abort();
+        }
+      },
+      error: function (jqXHR, textStatus){
+        if (textStatus === 'timeout' || textStatus === 'error') {
+          var error_msg = "Something failed during the DB update process.";
+          console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
+          this.tryCount++;
+          if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+          }
+          return;
+        }
+      },
+      success: function (data){
+        console.log("Validation status for requested material");
+        //Reset counter if previous request failed
+        //var json_string = JSON.stringify(data)
+        data = data.replace(/\s/g,'');
+        var obj = JSON.parse(data);
+        //$("#textarea_").val(obj.weight);
+        if (this.tryCount !== 0) {
+          this.tryCount = 0;
+        }
+        //compare_weights();
       },
       timeout:10000
     });
