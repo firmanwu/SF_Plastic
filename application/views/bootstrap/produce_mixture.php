@@ -33,7 +33,7 @@
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
           <div class="col-sm-6">
-            <h3 class="bg-primary text-white">混料前確認作業
+            <h3 class="bg-primary text-white">混料前置作業
           </h3>
           </div>
           <div class="col-sm-6">
