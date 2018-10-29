@@ -23,45 +23,66 @@ class Check_materials extends CI_Controller {
 	}
 
 	public function update_validation_info(){
-		//$this->load->model('checkmaterials');
 		$this->load->model('daily_orders_formulas_model');
 		parse_str(file_get_contents("php://input"),$post_vars);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 2: ".print_r($post_vars,true));
 
 		$data_array = json_decode($post_vars['info']);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 3: ".print_r($data_array,true));
 		$primary_key = $data_array[2];
 		$validation_array = json_encode($data_array[0]);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 4: ".print_r($validation_array,true));
 		$material_info_array = $data_array[1];
 		$material_info_array = json_decode($material_info_array, true);
 		$material_id = $material_info_array['material_id']; //for later usse
 		$material_info_array['weight'] = 99999;
 		$material_info_array = json_encode($material_info_array);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 5: ".print_r($material_info_array,true));
 
-		//We get from DB current values for multivalidation and material info
+		//We get from DB current values for multi_validation and material_info
 		$current_multi_validation_data = $this->daily_orders_formulas_model->get_multi_validation_data ($primary_key);
-		log_message("ERROR", "CURRENT MULTI VALIDATION DATA: ".print_r($current_multi_validation_data,true));
 		$current_material_info_data =$this->daily_orders_formulas_model->get_material_info_data ($primary_key);
-		log_message("ERROR", "CURRENT MATERIAL INFO DATA: ".print_r($current_material_info_data,true));
 
 		//We must replace the info for the material we are working with in both json objects
+		//First multi_validation
 		$current_multi_validation_data_array = json_decode($current_multi_validation_data['multi_validation'], true);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 6: ".print_r($current_multi_validation_data_array,true));
 		$current_multi_validation_data_array[$material_id] = json_decode($validation_array,true);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 7: ".print_r($current_multi_validation_data_array,true));
 		$final_multi_validation_json = json_encode($current_multi_validation_data_array);
-		log_message("ERROR", "VALIDATION INFO PASS FROM AJAX 8: ".print_r($final_multi_validation_json,true));
 
-
+		//Then material_info
 		$current_material_info_data = json_decode($current_material_info_data['material_info'], true);
-		log_message("ERROR", "MAT INFO INFO PASS FROM AJAX 6: ".print_r($current_material_info_data,true));
 		$current_material_info_data[$material_id] = json_decode($material_info_array,true);
-		log_message("ERROR", "MAT INFO INFO PASS FROM AJAX 7: ".print_r($current_material_info_data,true));
 		$final_material_data_json = json_encode($current_material_info_data);
-		log_message("ERROR", "MAT INFO INFO PASS FROM AJAX 8: ".print_r($final_material_data_json,true));
 
+
+		//We update the DB with the new values
+		$this->daily_orders_formulas_model->update_multi_validation_column ($final_multi_validation_json,$primary_key);
+		$this->daily_orders_formulas_model->update_material_info_column ($final_material_data_json,$primary_key);
+
+	}
+
+	public function update_material_info(){
+		$this->load->model('daily_orders_formulas_model');
+		parse_str(file_get_contents("php://input"),$post_vars);
+
+		$data_array = json_decode($post_vars['info']);
+		$primary_key = $data_array[3];
+		$validation_array = json_encode($data_array[0]);
+		$material_id = $data_array[2]; //for later usse
+		$material_weight = $data_array[1];
+
+		//We get from DB current values for multi_validation and material_info
+		$current_multi_validation_data = $this->daily_orders_formulas_model->get_multi_validation_data ($primary_key);
+		$current_material_info_data =$this->daily_orders_formulas_model->get_material_info_data ($primary_key);
+
+		//We must replace the info for the material we are working with in both json objects
+		//First multi_validation
+		$current_multi_validation_data_array = json_decode($current_multi_validation_data['multi_validation'], true);
+		$current_multi_validation_data_array[$material_id] = json_decode($validation_array,true);
+		$final_multi_validation_json = json_encode($current_multi_validation_data_array);
+
+		//Then material_info
+		$current_material_info_data = json_decode($current_material_info_data['material_info'], true);
+		$mat_data_for_id = $current_material_info_data[$material_id];
+		$mat_data_for_id['weight'] = $material_weight;
+		$current_material_info_data[$material_id] = $mat_data_for_id;
+		$final_material_data_json = json_encode($current_material_info_data);
 
 		//We update the DB with the new values
 		$this->daily_orders_formulas_model->update_multi_validation_column ($final_multi_validation_json,$primary_key);

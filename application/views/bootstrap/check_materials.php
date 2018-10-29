@@ -232,6 +232,8 @@
                           </div> 
                           <div class="col-sm-6">
                             <input type="text" id="hide-weight" value="">
+                            <input type="hidden" id="row-number-hide" value="">
+                            <input type="hidden" id="material-id-hide" value="">
                           </div> 
                         </div>
                       </div>
@@ -411,6 +413,9 @@
         var current_row_class_splitted = current_row_class.split('-');
         var current_row = current_row_class_splitted[2];
         var material_id = $("#material-check-id."+current_row).text();
+        //Fill out hidden fields with row and material_id for future use
+        $("#row-number-hide").val(current_row);
+        $("#material-id-hide").val(material_id);
         //Fill out amount-hidden field
         var material_amount = get_material_object_by_index(material_id, array_material_info);
         $("#amount-hidden").text(material_amount);
@@ -453,8 +458,10 @@
     });
 
     $( ":button.print-qrcode" ).on("click", function () {
-        
-        fill_out_material_table();
+        var current_row_class = this.classList[3];
+        var current_row_class_splitted = current_row_class.split('-');
+        var current_row = current_row_class_splitted[3];
+        fill_out_material_table(current_row);
     });
     //Hide non required elements during page loading
     $("#non-match-warning").hide();
@@ -611,6 +618,8 @@
     function confirm_weight(close_var){
 
       var current_row = $("#row-number-hide").val();
+      //We need material id to replace the weight in the json object
+      var material_id = $("#material-id-hide").val();
       //enable print qrcode for that row
       $(".print-qrcode-button-"+current_row).prop('disabled', false);
       //Add json info to textarea
@@ -618,14 +627,14 @@
       var json_weight = ', "weight":"'+scale_weight+'"}';
       
       textarea_class = '.input-textbox-'+current_row;
-      var textarea_content = $(textarea_class).val();
-      var sliced_textarea = textarea_content.slice(0,-2);
-      $(textarea_class).val(sliced_textarea+json_weight);
-      //$(".led-green-box-"+current_row).show();
-      //$(".led-red-box-"+current_row).hide();
+      // Save into DB material information and update validation of check material
+      var json_validation = {"checked":1, "weighted":1};
 
+      update_material_info(json_validation, scale_weight, material_id, order_id);
+
+      //TODO: reload texarea 
       //Prettify textarea content
-      prettyPrint(textarea_class);
+      //prettyPrint(textarea_class);
       //Close modal window
       $("#materialWeightModal").modal('toggle');
 
@@ -750,6 +759,51 @@
     });
   }
 
+  function update_material_info(json_validation, scale_weight, material_id, order_id){
+    var request = null;
+    var json_array = [json_validation, scale_weight, material_id, order_id];
+    request = $.ajax({
+      url: 'update_material_info',
+      type: 'POST',
+      data:{info: JSON.stringify(json_array)},
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      tryCount: 0,
+      retryLimit: 30,
+      async: true,
+      beforeSend: function() {
+        if (request != null){
+          request.abort();
+        }
+      },
+      error: function (jqXHR, textStatus){
+        if (textStatus === 'timeout' || textStatus === 'error') {
+          var error_msg = "Something failed during the DB update process.";
+          console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
+          this.tryCount++;
+          if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+          }
+          return;
+        }
+      },
+      success: function (data){
+        console.log("Validation status for requested material");
+        //Reset counter if previous request failed
+        //var json_string = JSON.stringify(data)
+        data = data.replace(/\s/g,'');
+        var obj = JSON.parse(data);
+        //$("#textarea_").val(obj.weight);
+        if (this.tryCount !== 0) {
+          this.tryCount = 0;
+        }
+        //compare_weights();
+      },
+      timeout:10000
+    });
+  }
+
   function compare_weights(){
     var formula_weight = $("#amount-hidden").text();
     var scale_weight = $("#hide-weight").val();
@@ -792,8 +846,8 @@
       $printSection.appendChild(domClone);
   }
 
-  function fill_out_material_table (){
-      var current_row = $("#row-number-hide").val();
+  function fill_out_material_table (current_row){
+      //var current_row = $("#row-number-hide").val();
       
       textarea_class = '.input-textbox-'+current_row;
       var textarea_content = $(textarea_class).val();
