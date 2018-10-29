@@ -16,7 +16,7 @@ class Produce_mixture extends CI_Controller {
 		$data['material_id'] = $material_id_segment;
 		$data['query'] = $this->materials->get_formula_materials_sorted($formula_info['formula_id']);
 		$data['formula_name'] = $this->materials->get_formula_name_from_id($formula_info['formula_id']);	
-		$data['page_title'] = '混料前確認作業';
+		$data['page_title'] = '混料前置作業';
 		//$this->load->view('layout/header.php', $data);
 		$this->load->view('bootstrap/produce_mixture.php', $data);
 		//$this->load->view('layout/footer.php', $data);

@@ -95,7 +95,7 @@ class Daily_orders_formulas extends CI_Controller {
                 $crud->set_subject('生產排程');
                 $crud->set_relation('formula_id', "formula",'name');
                 $crud->add_action('原料準備作業','','check_materials','el el-check');
-                $crud->add_action('混料前確認作業','','produce_mixture','el el-list');
+                $crud->add_action('混料前置作業','','produce_mixture','el el-list');
                 $crud->display_as('order_id', '排程單編號');
                 $crud->display_as('formula_id', '配方名稱');
                 $crud->display_as('materialCheck', '備料確認');
