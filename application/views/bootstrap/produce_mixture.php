@@ -72,7 +72,7 @@
                         echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
                         echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                         echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
-                  if($key == 'material_id'){
+                  if($key == '原料編號'){
                     echo "<div id='material-check-id' class='material-check-id-".$value." ".$row_number."' style='display:none;'>".$value."</div>";
                   }
                         echo '</div>';
@@ -173,7 +173,7 @@
                         </div>
                         <div class="row row-qr-name" style="display: none;">
                           <div class="col-sm-6">
-                            <label id="label-name">Name: </label>
+                            <label id="label-name">待確認原料名稱</label>
                           </div>
                           <div class="col-sm-6">
                             <span name="material-name-hidden" id="material-name-hidden"> </span>
@@ -205,7 +205,7 @@
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
                   <button type="button" class="btn reset-btn">重置</button>
                   <button type="button" class="btn btn-primary confirm-btn">確認</button>
-                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
+                  <button type="button" class="btn btn-primary confirm-weight-btn">確認並秤重</button>
                 </div>
               </div>
             </div>
@@ -268,20 +268,14 @@
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>原料的 QR code 及相關資料</p>
+                    <p>QR code 及相關資料</p>
                     <br>
                     <div class="row modal-content" id="printable-area">
-                      <div class="col-sm-6 modal-content qr-code">
-                        <?php 
-                          $material_info_json= $_COOKIE['materialInfo'];
-                          QRcode::png($material_info_json, 'test.png', 'M', 10, 2);
-                        ?>
-                        <img src="../test.png" title="qrcode">
-                      </div>
+                      <div class="col-sm-6 modal-content qr-code"></div>
                       <div class="col-sm-6 modal-content material-info h-100">
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-name-label">
-                            Material Name:
+                            原料名稱
                           </div>
                           <div class="col-sm-6 mat-name-value">
                             <span class="material_name"></span>
@@ -289,7 +283,7 @@
                         </div>
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-id-label">
-                            Material Id:
+                            原料編號
                           </div>
                           <div class="col-sm-6 mat-id-value">
                             <span class="material_id"></span>
@@ -297,7 +291,7 @@
                         </div>
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-form-amnt-label">
-                            Material Req.Amount:
+                            配方中所需重量
                           </div>
                           <div class="col-sm-6 mat-form-amnt-value">
                             <span class="amount"></span>
@@ -305,7 +299,7 @@
                         </div>
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-weight-label">
-                            Weigth Info:
+                            實際重量
                           </div>
                           <div class="col-sm-6 mat-weighst-value">
                             <span class="weight"></span>
@@ -464,8 +458,18 @@
         var current_row_class = this.classList[3];
         var current_row_class_splitted = current_row_class.split('-');
         var current_row = current_row_class_splitted[3];
-        fill_out_material_table(current_row);
+
+        //We get the material info on the textarea
+        var textarea_class = '.input-textbox-'+current_row;
+        var material_info = $(textarea_class).val();
+        var qrcode = generate_qr_code(material_info, current_row);        
     });
+
+    $("#printQrCodeModal").on("hidden.bs.modal", function () {
+        $('.qr-code').empty();
+        location.reload(true);
+    });
+
     //Hide non required elements during page loading
     $("#non-match-warning").hide();
     $("#match-warning").hide();
@@ -919,6 +923,26 @@
           $(".weight-button-"+row).prop('title', "Material checked");
         }
       });
+  }
+
+  function generate_qr_code (material_info, current_row){
+    $.ajax({
+      url: 'generate_qr_code',
+      type: 'POST',
+      data: {info: material_info},
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      async: false,
+      success: function(response) { 
+        console.log("QR CODE GENERATED: "+response);
+        if (response == 200){
+          fill_out_material_table(current_row);
+          $('.qr-code').prepend('<img src="../test.png" title="qrcode">');
+        } else{
+          console.log("QR CODE GENERATED ERROR: "+response);
+        }
+      }
+  });
   }
 
 </script>
