@@ -438,10 +438,6 @@
     });
     $(".confirm-weight-final-btn").on('click', function(){
       confirm_weight(true);
-      var current_row = $("#row-number-hide").val();
-      var textarea_class = '.input-textbox-'+current_row;
-      var material_info = $(textarea_class).val();
-      Cookies.set('materialInfo', material_info);
     });
 
     //Focus the mouse pointer in the text input to ease user handling
@@ -618,8 +614,10 @@
       //Prettify textarea content
       //prettyPrint(textarea_class);
       //Close modal window
-      if (close_modal)
+      if (close_modal){
         $("#materialCheckModal").modal('toggle');
+        location.reload(true);
+      }    
     }
 
     function confirm_weight(close_var){
