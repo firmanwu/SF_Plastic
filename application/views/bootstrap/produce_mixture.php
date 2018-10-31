@@ -38,9 +38,9 @@
           <!-- Dynamic table start -->   
           <div class="row header bg-primary text-white" style="boder: black solid 2px;">
             <div class="col-sm-4 text-weight-bold" style="font-size:24px;">原料</div>
-            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">執行項目</div>
-            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">QR code 讀取內容</div>
-            <div class="col-sm-2 bg-primary text-white" style="font-size:24px;">確認結果</div>
+            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">執行項目</div>
+<!--             <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">QR code 讀取內容</div>
+ -->            <div class="col-sm-4 bg-primary text-white" style="font-size:24px;">確認結果</div>
           </div>
           <?php
             $row_number=0;
@@ -79,7 +79,7 @@
                         $param_number++;
                    }
                    echo '</div>';
-                   echo '<div class="col-sm-2 text-center border-right"> 
+                   echo '<div class="col-sm-4 text-center border-right"> 
                                 <button type="button" class="btn btn-primary mat-check check-button-'.$row_number.'" data-toggle="modal" data-target="#materialCheckModal">
                                   原料確認
                                 </button>
@@ -88,10 +88,10 @@
                                   原料秤重
                                 </button> -->
                         </div>';
-                   echo '<div class="col-sm-4 text-center border-right"> 
-                                <textarea class="input-textbox-'.$row_number.'" placeholder="從 QR code 讀取到的內容" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
-                        </div>';
-                   echo '<div class="col-sm-2 text-center"> 
+                   //echo '<div class="col-sm-4 text-center border-right"> 
+                                //<textarea class="input-textbox-'.$row_number.'" placeholder="從 QR code 讀取到的內容" rows="10" columns="70" disabled style="width:300px;height:100px"></textarea>
+                        //</div>';
+                   echo '<div class="col-sm-4 text-center"> 
                             <div class="led-red-box-'.$row_number.' align-middle">
                               <div class="led-red"></div>
                             </div>
@@ -139,7 +139,7 @@
                             <div class="material-label float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label" style="display: none;">
+                        <div class="row modal-label" >
                           <div class="col-sm-6">
                             <label>所需重量</label>
                           </div> 
@@ -147,11 +147,11 @@
                             <div class="material-id float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label" style="display: none;">
+                        <div class="row modal-label">
                           <div class="col-sm-6">
                             <label>Amount: </label>
                           </div> 
-                          <div class="col-sm-9">
+                          <div class="col-sm-6">
                             <div class="material-amount float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
@@ -205,7 +205,6 @@
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
                   <button type="button" class="btn reset-btn">重置</button>
                   <button type="button" class="btn btn-primary confirm-btn">確認</button>
-                  <button type="button" class="btn btn-primary confirm-weight-btn">確認並秤重</button>
                 </div>
               </div>
             </div>
@@ -361,8 +360,9 @@
     }
     //Prettify textareas contents
     $('textarea').each(function(){
-       var pretty_data = prettyPrint_data(this.value); 
-       this.value = pretty_data;
+       var pretty_data = prettyPrint_data(this.value);
+       if(pretty_data) 
+        this.value = pretty_data;
     });
 
     //Hide weigth input field
@@ -519,8 +519,8 @@
       $('#amount-hidden').text(qr_object.amount);
 
       $('.row-qr-name').show();
-      //$('.row-qr-id').show();
-      //$('.row-qr-amount').show();
+      $('.row-qr-id').show();
+      $('.row-qr-amount').show();
       $('#qr-box').hide();
 
       compare();
@@ -544,8 +544,8 @@
       var amount_check = order_amount.localeCompare(qr_amount);
 
       if (material_name_check !== 0) non_match.push("Material Label");
-      //if (material_id_check !== 0) non_match.push("Material Id");
-      //if (amount_check !== 0) non_match.push("Amount");
+      if (material_id_check !== 0) non_match.push("Material Id");
+      if (amount_check !== 0) non_match.push("Amount");
 
       if (non_match.length !== 0) {
         //alert("Non matching elements: "+JSON.stringify(non_match));
@@ -604,7 +604,7 @@
       }
       textarea_class = '.input-textbox-'+current_row;
       // Save into DB material information and update validation of check material
-      var json_validation = {"checked":1, "weighted":99999};
+      var json_validation = {"mixed":1, "weighted":1, "checked":1};
       //We add default value for non weight data
       var json_material_info = qr_data;
       update_material_check_validation(json_validation, json_material_info, order_id);
@@ -635,7 +635,7 @@
       
       textarea_class = '.input-textbox-'+current_row;
       // Save into DB material information and update validation of check material
-      var json_validation = {"checked":1, "weighted":1};
+      var json_validation = {"checked":1, "weighted":1, "mixed":1};
 
       update_material_info(json_validation, scale_weight, material_id, order_id);
 
@@ -662,15 +662,20 @@
 
   function prettyPrint(textarea_id) {
       var ugly = $(textarea_id).val();
-      var obj = JSON.parse(ugly);
-      var pretty = JSON.stringify(obj, undefined, 4);
-      $(textarea_id).val(pretty);
+      if (!isEmptyOrSpaces(ugly)){
+        var obj = JSON.parse(ugly);
+        var pretty = JSON.stringify(obj, undefined, 4);
+        $(textarea_id).val(pretty);
+      }  
   }
 
   function prettyPrint_data(textarea_data) {
       var ugly = textarea_data;
-      var obj = JSON.parse(ugly);
-      var pretty = JSON.stringify(obj, undefined, 4);
+      var pretty_json ={};
+      if (!isEmptyOrSpaces(ugly)){
+        var obj = JSON.parse(ugly);
+        var pretty = JSON.stringify(obj, undefined, 4);
+      }
       return pretty;
   }
 
@@ -898,30 +903,32 @@
         var row = class_list[1];
         var checked_status ={};
         var weighted_status = {};
+        var mixed_status = {};
         //We need to get the validation information of the material_id retrieved
         $.each(materials_validation_info, function(i,obj){
           if (material_id == i){
             checked_status = obj.checked;
             weighted_status = obj.weighted;
+            mixed_status = obj.mixed;
             return false;
           }
         });
         //Now we can show and hide elements depending on the retrieved results  
         if (checked_status == 1 && weighted_status == 1){
-          //With the row value we proceed to update buttons and leds
-          $(".led-green-box-"+row).show();
-          $(".led-red-box-"+row).hide();
-          $(".print-qrcode-button-"+row).prop('disabled', false);
-          $(".weight-button-"+row).prop('disabled', false);
-          $(".weight-button-"+row).prop('title', "Material checked");
-        } else if (checked_status == 1 && weighted_status != 1){
-          //With the row value we proceed to update buttons and leds
-          $(".led-green-box-"+row).show();
-          $(".led-red-box-"+row).hide();
-          $(".print-qrcode-button-"+row).prop('disabled', true);
-          $(".weight-button-"+row).prop('disabled', false);
-          $(".weight-button-"+row).prop('title', "Material checked");
+          $(".check-button-"+row).prop('disabled',false);
+          if (mixed_status == 1){
+            //With the row value we proceed to update buttons and leds
+            $(".led-green-box-"+row).show();
+            $(".led-red-box-"+row).hide();
+          } else {
+            //With the row value we proceed to update buttons and leds
+            $(".led-green-box-"+row).hide();
+            $(".led-red-box-"+row).show();
+          }
+        } else{
+          $(".check-button-"+row).prop('disabled',true);
         }
+        
       });
   }
 

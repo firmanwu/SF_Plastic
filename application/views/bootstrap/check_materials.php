@@ -600,7 +600,7 @@
       }
       textarea_class = '.input-textbox-'+current_row;
       // Save into DB material information and update validation of check material
-      var json_validation = {"checked":1, "weighted":99999};
+      var json_validation = {"checked":1, "weighted":99999, "mixed":99999};
       //We add default value for non weight data
       var json_material_info = qr_data;
       update_material_check_validation(json_validation, json_material_info, order_id);
@@ -633,7 +633,7 @@
       
       textarea_class = '.input-textbox-'+current_row;
       // Save into DB material information and update validation of check material
-      var json_validation = {"checked":1, "weighted":1};
+      var json_validation = {"checked":1, "weighted":1, "mixed":99999};
 
       update_material_info(json_validation, scale_weight, material_id, order_id);
 

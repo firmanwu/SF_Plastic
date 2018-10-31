@@ -151,6 +151,7 @@ class Daily_orders_formulas extends CI_Controller {
 		foreach ($new_array as $value) {
     		$final_array[$value]['checked'] = 99999;
     		$final_array[$value]['weighted'] = 99999;
+            $final_array[$value]['mixed'] = 99999;
     	}
 
 		$json_result = json_encode($final_array);
