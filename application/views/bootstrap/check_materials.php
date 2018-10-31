@@ -101,7 +101,7 @@
                 <div class="print-qrcode-'.$row_number.' align-middle" style="vertical-align:middle;">
                 <br>
                 <button type="button" class="btn btn-primary print-qrcode print-qrcode-button-'.$row_number.'" data-toggle="modal" data-target="#printQrCodeModal">
-                列印 QR code
+                產生 QR code
                 </button>
                 </div>
                 </div>';                        
@@ -268,14 +268,14 @@
                 </div>
                 <div class="container" style="width: auto;">
                   <div class="modal-body">
-                    <p>原料的 QR code 及相關資料</p>
+                    <p>QR code 及相關資料</p>
                     <br>
                     <div class="row modal-content" id="printable-area">
                       <div class="col-sm-6 modal-content qr-code"></div>
                       <div class="col-sm-6 modal-content material-info h-100">
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-name-label">
-                            Material Name:
+                            原料名稱
                           </div>
                           <div class="col-sm-6 mat-name-value">
                             <span class="material_name"></span>
@@ -283,7 +283,7 @@
                         </div>
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-id-label">
-                            Material Id:
+                            原料編號
                           </div>
                           <div class="col-sm-6 mat-id-value">
                             <span class="material_id"></span>
@@ -291,7 +291,7 @@
                         </div>
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-form-amnt-label">
-                            Material Req.Amount:
+                            配方中所需重量
                           </div>
                           <div class="col-sm-6 mat-form-amnt-value">
                             <span class="amount"></span>
@@ -299,7 +299,7 @@
                         </div>
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-weight-label">
-                            Weigth Info:
+                            實際重量
                           </div>
                           <div class="col-sm-6 mat-weighst-value">
                             <span class="weight"></span>
