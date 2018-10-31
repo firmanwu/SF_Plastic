@@ -90,5 +90,14 @@ class Check_materials extends CI_Controller {
 
 	}
 
+	public function generate_qr_code(){
+		$this->load->library('qrloader.php');
+		parse_str(file_get_contents("php://input"),$post_vars);
+		$material_info_array = json_decode($post_vars['info'],true);
+		$final_info_json = json_encode($material_info_array);
+		QRcode::png($final_info_json, 'test.png', 'M', 10, 2);
+		echo 200;
+	}
+
 
 }

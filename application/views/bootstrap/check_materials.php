@@ -268,13 +268,7 @@
                     <p>原料的 QR code 及相關資料</p>
                     <br>
                     <div class="row modal-content" id="printable-area">
-                      <div class="col-sm-6 modal-content qr-code">
-                        <?php 
-                          $material_info_json= $_COOKIE['materialInfo'];
-                          QRcode::png($material_info_json, 'test.png', 'M', 10, 2);
-                        ?>
-                        <img src="../test.png" title="qrcode">
-                      </div>
+                      <div class="col-sm-6 modal-content qr-code"></div>
                       <div class="col-sm-6 modal-content material-info h-100">
                         <div class="row mat-info">
                           <div class="col-sm-6 mat-name-label">
@@ -461,8 +455,18 @@
         var current_row_class = this.classList[3];
         var current_row_class_splitted = current_row_class.split('-');
         var current_row = current_row_class_splitted[3];
-        fill_out_material_table(current_row);
+
+        //We get the material info on the textarea
+        var textarea_class = '.input-textbox-'+current_row;
+        var material_info = $(textarea_class).val();
+        var qrcode = generate_qr_code(material_info, current_row);        
     });
+
+    $("#printQrCodeModal").on("hidden.bs.modal", function () {
+        $('.qr-code').empty();
+        location.reload(true);
+    });
+
     //Hide non required elements during page loading
     $("#non-match-warning").hide();
     $("#match-warning").hide();
@@ -916,6 +920,26 @@
           $(".weight-button-"+row).prop('title', "Material checked");
         }
       });
+  }
+
+  function generate_qr_code (material_info, current_row){
+    $.ajax({
+      url: 'generate_qr_code',
+      type: 'POST',
+      data: {info: material_info},
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      async: false,
+      success: function(response) { 
+        console.log("QR CODE GENERATED: "+response);
+        if (response == 200){
+          fill_out_material_table(current_row);
+          $('.qr-code').prepend('<img src="../test.png" title="qrcode">');
+        } else{
+          console.log("QR CODE GENERATED ERROR: "+response);
+        }
+      }
+  });
   }
 
 </script>
