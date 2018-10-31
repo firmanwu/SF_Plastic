@@ -1,34 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title><?php echo $page_title; ?></title>
-
-    <!-- Bootstrap -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
-    <script src="<?php echo base_url('assets/jquery/js.cookie.js'); ?>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/grocery_crud/themes/bootstrap-v4/css/elusive-icons/css/elusive-icons.min.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/bootstrap/css/pe-icon-7-stroke.css'); ?>" rel="stylesheet" />
-    <link href="<?php echo base_url('assets/bootstrap/css/ct-navbar.css'); ?>" rel="stylesheet" />
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-
-
-
 <nav class="navbar navbar-inverse navbar-fixed-top bg-primary text-white">
       <div class="container bg-primary" style="width: 1198px;">
         <div class="row">
@@ -56,6 +25,12 @@
                     $formula_name = json_decode(json_encode($formula_name[0]), true);
                     echo ' '.$formula_name['name'];
                     $formula_id = json_decode(json_encode($query_dorder_formula[0]), true);
+                    log_message("ERROR","FORMULA ID ARRAY: ".print_r($formula_id,true));
+                    $material_info_stdclass = json_decode($formula_id['material_info']);
+                    $material_info_array = json_decode(json_encode($material_info_stdclass), true);
+
+                    $multi_validation_stdclass = json_decode($formula_id['multi_validation']);
+                    $multi_validation_array = json_decode(json_encode($multi_validation_stdclass), true);
                 ?>
               </p>
           </div>
@@ -69,14 +44,14 @@
           </div>
           <?php
             $row_number=0;
+                log_message("ERROR", "QUERY CONTENT: ".print_r($query,true));
             foreach ($query as $row) {
+                 log_message("ERROR","FORMULA MATERIAL DATA: ".print_r($row,true));
+                 $row_array = json_decode(json_encode($row), true);
                echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black; border-left: solid black 2px; border-right: solid black; border-bottom: solid black 2px; padding: 10px;">';
-               //$i=0;
-               //for ($i=0; $i<=2; $i++){
                   echo '<div class="col-sm-4 test-weight-bold" style="font-size:24px; boder-right:solid black;">';
-                  $array = json_decode(json_encode($row),true);
                   $param_number=0;
-                   foreach ($array as $key => $value) {
+                 foreach ($row_array as $key => $value) {
                         switch($key) {
                             case "label":
                                 $key = "原料名稱";
@@ -97,6 +72,9 @@
                         echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
                         echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                         echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
+                  if($key == 'material_id'){
+                    echo "<div id='material-check-id' class='material-check-id-".$value." ".$row_number."' style='display:none;'>".$value."</div>";
+                  }
                         echo '</div>';
                         $param_number++;
                    }
@@ -127,7 +105,7 @@
                                 </button> -->
                             </div>
                         </div>';                        
-               //}
+               
                echo '</div>';
                $row_number++;
             }
@@ -257,6 +235,8 @@
                           </div> 
                           <div class="col-sm-6">
                             <input type="text" id="hide-weight" value="">
+                            <input type="hidden" id="row-number-hide" value="">
+                            <input type="hidden" id="material-id-hide" value="">
                           </div> 
                         </div>
                       </div>
@@ -360,6 +340,20 @@
       $(".print-qrcode").prop('disabled', true);
       $(".mat-weight").prop('disabled', true);
       $(".mat-weight").prop('title', "Material not checked");
+
+      var json_multi_validation = '<?php echo $formula_id["multi_validation"]?>';
+      var json_material_info = '<?php echo $formula_id["material_info"]?>';
+      var order_id = '<?php echo $formula_id["order_id"]?>';
+      if (!isEmptyOrSpaces(json_multi_validation)){
+        //We proceed to check the status of the two validation steps: check material and weight it
+        var array_multi_validation = JSON.parse(json_multi_validation);
+        check_validation_status(array_multi_validation);
+        
+        if (!isEmptyOrSpaces(json_material_info)){
+          var array_material_info = JSON.parse(json_material_info);
+          check_material_info(array_material_info);
+        }
+      }
     } else {
       $("[class^=led-red-box-").hide();
       $(".mat-check").prop('disabled', true);
@@ -371,6 +365,12 @@
       $(".print-btn-global").prop("disabled", false);
 
     }
+    //Prettify textareas contents
+    $('textarea').each(function(){
+       var pretty_data = prettyPrint_data(this.value); 
+       this.value = pretty_data;
+    });
+
     //Hide weigth input field
     $("#hide-weight").hide();
     //Show info when user click on button to check materials
@@ -408,6 +408,21 @@
     $( ":button.mat-weight" ).on("click", function () {
       $("#non-match-weight-warning").hide();
       $("#match-weight-warning").hide();
+      //If the material has been checked and stored in DB so the user goes directly to weight process. Amount-hidden must be fill out with DB info before check scale output
+      if (isEmptyOrSpaces($("#amount-hidden").text())){
+        //We need to get row and material id to fill out the info
+        console.log("MATERIAL WEIGHT BUTTON: "+this); 
+        var current_row_class = this.classList[3];
+        var current_row_class_splitted = current_row_class.split('-');
+        var current_row = current_row_class_splitted[2];
+        var material_id = $("#material-check-id."+current_row).text();
+        //Fill out hidden fields with row and material_id for future use
+        $("#row-number-hide").val(current_row);
+        $("#material-id-hide").val(material_id);
+        //Fill out amount-hidden field
+        var material_amount = get_material_object_by_index(material_id, array_material_info);
+        $("#amount-hidden").text(material_amount);
+      }
       $("#weight-req").text($("#amount-hidden").text());
       check_weight_output();
       //confirm_material(false);
@@ -446,8 +461,10 @@
     });
 
     $( ":button.print-qrcode" ).on("click", function () {
-        
-        fill_out_material_table();
+        var current_row_class = this.classList[3];
+        var current_row_class_splitted = current_row_class.split('-');
+        var current_row = current_row_class_splitted[3];
+        fill_out_material_table(current_row);
     });
     //Hide non required elements during page loading
     $("#non-match-warning").hide();
@@ -523,8 +540,8 @@
       var amount_check = order_amount.localeCompare(qr_amount);
 
       if (material_name_check !== 0) non_match.push("Material Label");
-      if (material_id_check !== 0) non_match.push("Material Id");
-      if (amount_check !== 0) non_match.push("Amount");
+      //if (material_id_check !== 0) non_match.push("Material Id");
+      //if (amount_check !== 0) non_match.push("Amount");
 
       if (non_match.length !== 0) {
         //alert("Non matching elements: "+JSON.stringify(non_match));
@@ -577,18 +594,25 @@
     function confirm_material(close_modal){
       var current_row = $("#row-number-hide").val();
       var qr_data = $("#qr-box").val();
+      console.log(qr_data);
       if (qr_data.indexOf('http') != -1){
         qr_data = qr_data.substring(7,qr_data.length);
       }
       textarea_class = '.input-textbox-'+current_row;
-      $(textarea_class).val(qr_data);
+      // Save into DB material information and update validation of check material
+      var json_validation = {"checked":1, "weighted":99999};
+      //We add default value for non weight data
+      var json_material_info = qr_data;
+      update_material_check_validation(json_validation, json_material_info, order_id);
+
+      //$(textarea_class).val(qr_data);
       $(".led-green-box-"+current_row).show();
       $(".led-red-box-"+current_row).hide();
 
       //Enable Weight-button
       $(".weight-button-"+current_row).prop("disabled", false);
       //Prettify textarea content
-      prettyPrint(textarea_class);
+      //prettyPrint(textarea_class);
       //Close modal window
       if (close_modal)
         $("#materialCheckModal").modal('toggle');
@@ -597,6 +621,8 @@
     function confirm_weight(close_var){
 
       var current_row = $("#row-number-hide").val();
+      //We need material id to replace the weight in the json object
+      var material_id = $("#material-id-hide").val();
       //enable print qrcode for that row
       $(".print-qrcode-button-"+current_row).prop('disabled', false);
       //Add json info to textarea
@@ -604,14 +630,14 @@
       var json_weight = ', "weight":"'+scale_weight+'"}';
       
       textarea_class = '.input-textbox-'+current_row;
-      var textarea_content = $(textarea_class).val();
-      var sliced_textarea = textarea_content.slice(0,-2);
-      $(textarea_class).val(sliced_textarea+json_weight);
-      //$(".led-green-box-"+current_row).show();
-      //$(".led-red-box-"+current_row).hide();
+      // Save into DB material information and update validation of check material
+      var json_validation = {"checked":1, "weighted":1};
 
+      update_material_info(json_validation, scale_weight, material_id, order_id);
+
+      //TODO: reload texarea 
       //Prettify textarea content
-      prettyPrint(textarea_class);
+      //prettyPrint(textarea_class);
       //Close modal window
       $("#materialWeightModal").modal('toggle');
 
@@ -635,6 +661,17 @@
       var obj = JSON.parse(ugly);
       var pretty = JSON.stringify(obj, undefined, 4);
       $(textarea_id).val(pretty);
+  }
+
+  function prettyPrint_data(textarea_data) {
+      var ugly = textarea_data;
+      var obj = JSON.parse(ugly);
+      var pretty = JSON.stringify(obj, undefined, 4);
+      return pretty;
+  }
+
+  function isEmptyOrSpaces(str){
+      return str === null || str.match(/^ *$/) !== null;
   }
 
   function check_weight_output() {
@@ -675,6 +712,96 @@
           this.tryCount = 0;
         }
         compare_weights();
+      },
+      timeout:10000
+    });
+  }
+
+  function update_material_check_validation(json_validation, json_material_info, order_id) {
+    var request = null;
+    var json_array = [json_validation, json_material_info, order_id];
+    request = $.ajax({
+      url: 'update_validation_info',
+      type: 'POST',
+      data:{info: JSON.stringify(json_array)},
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      tryCount: 0,
+      retryLimit: 30,
+      async: true,
+      beforeSend: function() {
+        if (request != null){
+          request.abort();
+        }
+      },
+      error: function (jqXHR, textStatus){
+        if (textStatus === 'timeout' || textStatus === 'error') {
+          var error_msg = "Something failed during the DB update process.";
+          console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
+          this.tryCount++;
+          if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+          }
+          return;
+        }
+      },
+      success: function (data){
+        console.log("Validation status for requested material");
+        //Reset counter if previous request failed
+        //var json_string = JSON.stringify(data)
+        data = data.replace(/\s/g,'');
+        var obj = JSON.parse(data);
+        //$("#textarea_").val(obj.weight);
+        if (this.tryCount !== 0) {
+          this.tryCount = 0;
+        }
+        //compare_weights();
+      },
+      timeout:10000
+    });
+  }
+
+  function update_material_info(json_validation, scale_weight, material_id, order_id){
+    var request = null;
+    var json_array = [json_validation, scale_weight, material_id, order_id];
+    request = $.ajax({
+      url: 'update_material_info',
+      type: 'POST',
+      data:{info: JSON.stringify(json_array)},
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      tryCount: 0,
+      retryLimit: 30,
+      async: true,
+      beforeSend: function() {
+        if (request != null){
+          request.abort();
+        }
+      },
+      error: function (jqXHR, textStatus){
+        if (textStatus === 'timeout' || textStatus === 'error') {
+          var error_msg = "Something failed during the DB update process.";
+          console.log("ERROR: "+error_msg+" Try Count: "+this.tryCount);
+          this.tryCount++;
+          if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+          }
+          return;
+        }
+      },
+      success: function (data){
+        console.log("Validation status for requested material");
+        //Reset counter if previous request failed
+        //var json_string = JSON.stringify(data)
+        data = data.replace(/\s/g,'');
+        var obj = JSON.parse(data);
+        //$("#textarea_").val(obj.weight);
+        if (this.tryCount !== 0) {
+          this.tryCount = 0;
+        }
+        //compare_weights();
       },
       timeout:10000
     });
@@ -722,8 +849,8 @@
       $printSection.appendChild(domClone);
   }
 
-  function fill_out_material_table (){
-      var current_row = $("#row-number-hide").val();
+  function fill_out_material_table (current_row){
+      //var current_row = $("#row-number-hide").val();
       
       textarea_class = '.input-textbox-'+current_row;
       var textarea_content = $(textarea_class).val();
@@ -732,6 +859,65 @@
       $.each(mat_obj, function( index, value ) {
         //alert( index + ": " + value );
         $("."+index).text(value);
+      });
+  }
+
+  function get_material_object_by_index(material_id, array_material_info){
+    var material_amount ={};
+    $.each(array_material_info, function(i,obj){
+      if (material_id == i){
+        material_amount = obj.amount;
+        return false;
+      }
+    });
+    return material_amount;
+  }
+
+  function check_material_info(array_materials_info){
+    //We fill out hidden fields if material was already checked and/or weighted
+    $.each(array_materials_info, function(i, obj) {
+
+    });
+  }
+
+  function initialize_hidden_fields(materials_info){
+    $("#amount-hidden").text();
+  }
+
+  function check_validation_status (materials_validation_info){
+      $("[class^=material-check-id-").each(function(i, obj) {
+        //One by one we check the material check status and the weight status
+        //We extract required information from current element, material_id and row
+        var material_id = this.innerText;
+        var class_list_obj = this.className;
+        var class_list = class_list_obj.split(/\s+/);
+        var row = class_list[1];
+        var checked_status ={};
+        var weighted_status = {};
+        //We need to get the validation information of the material_id retrieved
+        $.each(materials_validation_info, function(i,obj){
+          if (material_id == i){
+            checked_status = obj.checked;
+            weighted_status = obj.weighted;
+            return false;
+          }
+        });
+        //Now we can show and hide elements depending on the retrieved results  
+        if (checked_status == 1 && weighted_status == 1){
+          //With the row value we proceed to update buttons and leds
+          $(".led-green-box-"+row).show();
+          $(".led-red-box-"+row).hide();
+          $(".print-qrcode-button-"+row).prop('disabled', false);
+          $(".weight-button-"+row).prop('disabled', false);
+          $(".weight-button-"+row).prop('title', "Material checked");
+        } else if (checked_status == 1 && weighted_status != 1){
+          //With the row value we proceed to update buttons and leds
+          $(".led-green-box-"+row).show();
+          $(".led-red-box-"+row).hide();
+          $(".print-qrcode-button-"+row).prop('disabled', true);
+          $(".weight-button-"+row).prop('disabled', false);
+          $(".weight-button-"+row).prop('title', "Material checked");
+        }
       });
   }
 
@@ -891,10 +1077,3 @@
     }
 
 </style>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="<?php echo base_url('assets/bootstrap/js/bootstrap.js'); ?>"></script>
-
-<script src="<?php echo base_url('assets/bootstrap/js/ct-navbar.js'); ?>"></script>
-</body>
-</html>
