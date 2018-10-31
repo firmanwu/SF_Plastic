@@ -56,6 +56,9 @@
                     case "label":
                     $key = "原料名稱";
                     break;
+                    case "material_id":
+                    $key = "原料編號";
+                    break;
                     case "weight":
                     $key = "所需重量";
                     break;
@@ -69,7 +72,7 @@
                   echo '<div class="row bg-light text-dark" style="font-size:16px; background-color:white; color: black;">';
                   echo "<div class='col-sm-6 text-left key-".$row_number.$param_number."'><label> ".ucwords($key)." </label></div>";
                   echo "<div class='col-sm-6 text-center value-".$row_number.$param_number."'> ".$value." </div>";
-                  if($key == 'material_id'){
+                  if($key == '原料編號'){
                     echo "<div id='material-check-id' class='material-check-id-".$value." ".$row_number."' style='display:none;'>".$value."</div>";
                   }
                   echo '</div>';
@@ -170,7 +173,7 @@
                         </div>
                         <div class="row row-qr-name" style="display: none;">
                           <div class="col-sm-6">
-                            <label id="label-name">Name: </label>
+                            <label id="label-name">待確認原料名稱</label>
                           </div>
                           <div class="col-sm-6">
                             <span name="material-name-hidden" id="material-name-hidden"> </span>
@@ -202,7 +205,7 @@
                   <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">關閉</button>
                   <button type="button" class="btn reset-btn">重置</button>
                   <button type="button" class="btn btn-primary confirm-btn">確認</button>
-                  <button type="button" class="btn btn-primary confirm-weight-btn">Confirm & Weigth</button>
+                  <button type="button" class="btn btn-primary confirm-weight-btn">確認並秤重</button>
                 </div>
               </div>
             </div>
