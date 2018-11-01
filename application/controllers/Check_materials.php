@@ -99,5 +99,10 @@ class Check_materials extends CI_Controller {
 		echo 200;
 	}
 
+	public function get_order_data($order_id){
+		$this->load->model('daily_orders_formulas');
+		return $this->daily_orders_formulas->get_formula_daily_order($order_id);
+	}
+
 
 }

@@ -615,9 +615,29 @@
       //prettyPrint(textarea_class);
       //Close modal window
       if (close_modal){
+        refresh_textarea_content(order_id,current_row);
         $("#materialCheckModal").modal('toggle');
         location.reload(true);
       }    
+    }
+
+    function refresh_textarea_content (order_id, row){
+      $.ajax({
+          url: 'get_order_data',
+          type: 'POST',
+          data: {"order_id": order_id},
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          async: false,
+          success: function(response) { 
+            console.log("Data to refresh textarea: "+response);
+            if (response){
+
+            } else{
+              console.log("ERROR: failed to get info to update the textarea "+response);
+            }
+          }
+      });
     }
 
     function confirm_weight(close_var){
@@ -642,6 +662,7 @@
       //prettyPrint(textarea_class);
       //Close modal window
       $("#materialWeightModal").modal('toggle');
+      location.reload(true);
 
     }
 
