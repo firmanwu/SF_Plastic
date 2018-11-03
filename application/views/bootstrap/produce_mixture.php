@@ -120,7 +120,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">秤重前原料確認</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">混料前原料確認</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -141,7 +141,7 @@
                         </div>
                         <div class="row modal-label" >
                           <div class="col-sm-6">
-                            <label>所需重量</label>
+                            <label>原料編號</label>
                           </div> 
                           <div class="col-sm-6">
                             <div class="material-id float-left" style="text-align:left;"></div>
@@ -149,7 +149,7 @@
                         </div>
                         <div class="row modal-label">
                           <div class="col-sm-6">
-                            <label>Amount: </label>
+                            <label>所需重量</label>
                           </div> 
                           <div class="col-sm-6">
                             <div class="material-amount float-left" style="text-align:left;"></div>
@@ -181,7 +181,7 @@
                         </div>
                         <div class="row row-qr-id" style="display: none;">
                           <div class="col-sm-6">
-                            <label id="label-id">Id: </label>
+                            <label id="label-id">待確認原料編號</label>
                           </div>
                           <div class="col-sm-6">
                             <span name="material-id-hidden" id="material-id-hidden"> </span>
@@ -189,7 +189,7 @@
                         </div>
                         <div class="row row-qr-amount" style="display: none;">
                           <div class="col-sm-6">
-                            <label id="label-amount"> Amount: </label>
+                            <label id="label-amount">實際重量</label>
                           </div>
                           <div class="col-sm-6">
                             <span name="amount-hidden" id="amount-hidden" > </span>
@@ -197,7 +197,7 @@
                         </div>
                       </div>
                     </div>
-                    <small id="match-warning" style="color: green; font-weight: bold;">原料正確，請秤重</small>
+                    <small id="match-warning" style="color: green; font-weight: bold;">原料正確</small>
                     <small id="non-match-warning" style="color: red; font-weight: bold;">原料錯誤，請再次確認</small>
                   </div>
                 </div>
