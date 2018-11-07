@@ -400,16 +400,23 @@
     });
     //Show info when user click on button to check materials
     $( ":button.mat-weight" ).on("click", function () {
+      //Update amount-hidden with the textarea in the row
+      var current_row_class = this.classList[3];
+      var current_row_class_splitted = current_row_class.split('-');
+      var current_row = current_row_class_splitted[2];
+      var material_id = $("#material-check-id."+current_row).text();
+
+      var textarea_class = '.input-textbox-'+current_row;
+      var material_info = $(textarea_class).val();
+      var material_info_array = $.parseJSON(material_info);
+      $("#amount-hidden").text(material_info_array.amount);
+
       $("#non-match-weight-warning").hide();
       $("#match-weight-warning").hide();
       //If the material has been checked and stored in DB so the user goes directly to weight process. Amount-hidden must be fill out with DB info before check scale output
-      if (isEmptyOrSpaces($("#amount-hidden").text())){
+      if (isEmptyOrSpaces($("#amount-hidden").text()) || $("#amount-hidden").text() == "99999"){
         //We need to get row and material id to fill out the info
-        console.log("MATERIAL WEIGHT BUTTON: "+this); 
-        var current_row_class = this.classList[3];
-        var current_row_class_splitted = current_row_class.split('-');
-        var current_row = current_row_class_splitted[2];
-        var material_id = $("#material-check-id."+current_row).text();
+        console.log("MATERIAL WEIGHT BUTTON: "+this);
         //Fill out hidden fields with row and material_id for future use
         $("#row-number-hide").val(current_row);
         $("#material-id-hide").val(material_id);
@@ -417,6 +424,9 @@
         var material_amount = get_material_object_by_index(material_id, array_material_info);
         $("#amount-hidden").text(material_amount);
       }
+      //Fill out hidden fields with row and material_id for future use
+      $("#row-number-hide").val(current_row);
+      $("#material-id-hide").val(material_id);
       $("#weight-req").text($("#amount-hidden").text());
       check_weight_output();
       //confirm_material(false);
@@ -644,14 +654,23 @@
 
       var current_row = $("#row-number-hide").val();
       //We need material id to replace the weight in the json object
-      var material_id = $("#material-id-hide").val();
+      var material_id = "";
+      if ($("#material-id-hide").val()){
+        material_id = $("#material-id-hide").val();
+      }
+      else{
+        textarea_class = '.input-textbox-'+current_row;
+        material_obj = $.parseJSON($(textarea_class).val());
+        material_id = material_obj.material_id;
+      }
+
       //enable print qrcode for that row
       $(".print-qrcode-button-"+current_row).prop('disabled', false);
       //Add json info to textarea
       var scale_weight = $("#hide-weight").val();
       var json_weight = ', "weight":"'+scale_weight+'"}';
       
-      textarea_class = '.input-textbox-'+current_row;
+
       // Save into DB material information and update validation of check material
       var json_validation = {"checked":1, "weighted":1, "mixed":99999};
 
@@ -663,6 +682,7 @@
       //Close modal window
       $("#materialWeightModal").modal('toggle');
       location.reload(true);
+      
 
     }
 
@@ -835,9 +855,14 @@
     var scale_weight = $("#hide-weight").val();
     var non_match = [];
 
-    var comparison_result = formula_weight.localeCompare(scale_weight);
+    var min_value = parseFloat(formula_weight) - 0.5;
+    var max_value = parseFloat(formula_weight) + 0.5;
 
-    if (comparison_result !== 0) non_match.push("Weight");
+    var comparison_result = isBetween(scale_weight,min_value,max_value);
+
+    //var comparison_result = formula_weight.localeCompare(scale_weight);
+
+    if (!comparison_result) non_match.push("Weight");
 
     if (non_match.length !== 0) {
       //alert("Non matching elements: "+JSON.stringify(non_match));
@@ -853,6 +878,10 @@
       $(".confirm-weight-final-btn").prop("disabled", false);
     }
 
+  }
+
+  function isBetween (n,a,b){
+    return (n - a) * (n - b) <= 0;
   }
 
   //Print only passed elements function
