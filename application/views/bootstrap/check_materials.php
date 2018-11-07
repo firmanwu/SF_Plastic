@@ -106,7 +106,8 @@
                 </div>
                 </div>';                        
                
-                echo '</div>';
+                echo '</div>
+                <input type="hidden" id="produced-amount-hide" value="">';
                 $row_number++;
               }
           ?>
@@ -228,17 +229,36 @@
                     <p>請等待電子磅秤傳送資料</p>
                     <br>
                     <div class="row">
-                      <div class="col-sm-6">
+                      <div class="col-sm-12">
                         <div class="row modal-label">
-                          <div class="col-sm-6">
-                            <label>所需重量</label><span name="weight-req" id="weight-req" > </span>
+                          <div class="col-sm-4">
+                            <label>所需重量</label>
                           </div> 
-                          <div class="col-sm-6">
+                          <div class="col-sm-4">
+                            <span name="weight-req" id="weight-req" > </span>
+                          </div> 
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-4">
+                            <label>Produced amount</label>
+                          </div> 
+                          <div class="col-sm-4">
+                            <span name="produced-amount" id="produced-amount" > </span>
+                          </div>
+                        </div>
+                        <div class="row modal-label">
+                          <div class="col-sm-4">
+                            <label>Final Weight</label>
+                          </div>
+                          <div class="col-sm-4">
+                            <span name="final-req-weight" id="final-req-weight" > </span>
+                          </div>
+                          <div class="col-sm-4">
                             <input type="text" id="hide-weight" value="">
                             <input type="hidden" id="row-number-hide" value="">
                             <input type="hidden" id="material-id-hide" value="">
-                          </div> 
-                        </div>
+                          </div>
+                        </div> 
                       </div>
                     </div>
                   </div>
@@ -364,6 +384,9 @@
        var pretty_data = prettyPrint_data(this.value); 
        this.value = pretty_data;
     });
+    //Add value of produceAmount into hidden field for future use
+    var produced_amount = '<?php echo $formula_id["producedAmount"]?>';
+    $("#produced-amount-hide").val(produced_amount);
 
     //Hide weigth input field
     $("#hide-weight").hide();
@@ -428,6 +451,9 @@
       $("#row-number-hide").val(current_row);
       $("#material-id-hide").val(material_id);
       $("#weight-req").text($("#amount-hidden").text());
+      $("#produced-amount").text($("#produced-amount-hide").val());
+      var total_req_weight = parseFloat($("#amount-hidden").text()) * parseFloat($("#produced-amount-hide").val());
+      $("#final-req-weight").text(total_req_weight);
       check_weight_output();
       //confirm_material(false);
       $("#materialWeightModal").modal('toggle');
@@ -441,6 +467,10 @@
       $("#non-match-weight-warning").hide();
       $("#match-weight-warning").hide();
       $("#weight-req").text($("#amount-hidden").text());
+      $("#produced-amount").text($("#produced-amount-hide").val());
+      var total_req_weight = parseFloat($("#amount-hidden").text()) * parseFloat($("#produced-amount-hide").val());
+      $("#final-req-weight").text(total_req_weight);
+      check_weight_output();
       check_weight_output();
       confirm_material(false);
       $("#materialCheckModal").modal('toggle');
@@ -852,11 +882,13 @@
 
   function compare_weights(){
     var formula_weight = $("#amount-hidden").text();
+    var produced_amount = $("#produced-amount-hide").val();
+    var required_weight = parseFloat(formula_weight) * parseFloat(produced_amount);
     var scale_weight = $("#hide-weight").val();
     var non_match = [];
 
-    var min_value = parseFloat(formula_weight) - 0.5;
-    var max_value = parseFloat(formula_weight) + 0.5;
+    var min_value = parseFloat(required_weight) - 0.5;
+    var max_value = parseFloat(required_weight) + 0.5;
 
     var comparison_result = isBetween(scale_weight,min_value,max_value);
 
