@@ -140,7 +140,7 @@
                             <div class="material-label float-left" style="text-align:left;"></div>
                           </div> 
                         </div>
-                        <div class="row modal-label" style="display: none;">
+                        <div class="row modal-label">
                           <div class="col-sm-6">
                             <label>所需重量</label>
                           </div> 
@@ -421,7 +421,7 @@
      //store row number into hidden input to be able to modify leds
      $("#row-number-hide").val(row_number_for_class);  
     });
-    //Show info when user click on button to check materials
+    //Show info when user click on button to weight materials
     $( ":button.mat-weight" ).on("click", function () {
       //Update amount-hidden with the textarea in the row
       var current_row_class = this.classList[3];
@@ -450,9 +450,11 @@
       //Fill out hidden fields with row and material_id for future use
       $("#row-number-hide").val(current_row);
       $("#material-id-hide").val(material_id);
-      $("#weight-req").text($("#amount-hidden").text());
+      var form_amount_class = '.value-'+current_row+"2";
+      var formula_amount = ($(form_amount_class).text()).trim();
+      $("#weight-req").text(formula_amount);
       $("#produced-amount").text($("#produced-amount-hide").val());
-      var total_req_weight = parseFloat($("#amount-hidden").text()) * parseFloat($("#produced-amount-hide").val());
+      var total_req_weight = parseFloat(formula_amount) * parseFloat($("#produced-amount-hide").val());
       $("#final-req-weight").text(total_req_weight);
       check_weight_output();
       //confirm_material(false);
@@ -466,11 +468,12 @@
     $(".confirm-weight-btn").on('click', function(){
       $("#non-match-weight-warning").hide();
       $("#match-weight-warning").hide();
-      $("#weight-req").text($("#amount-hidden").text());
+      //$("#weight-req").text($("#amount-hidden").text());
+      var order_amount = ($(".modal-body .material-amount").text()).trim();
+      $("#weight-req").text(order_amount);
       $("#produced-amount").text($("#produced-amount-hide").val());
-      var total_req_weight = parseFloat($("#amount-hidden").text()) * parseFloat($("#produced-amount-hide").val());
+      var total_req_weight = parseFloat(order_amount) * parseFloat($("#produced-amount-hide").val());
       $("#final-req-weight").text(total_req_weight);
-      check_weight_output();
       check_weight_output();
       confirm_material(false);
       $("#materialCheckModal").modal('toggle');
@@ -555,7 +558,7 @@
       $('#amount-hidden').text(qr_object.amount);
 
       $('.row-qr-name').show();
-      //$('.row-qr-id').show();
+      $('.row-qr-id').show();
       //$('.row-qr-amount').show();
       $('#qr-box').hide();
 
@@ -580,7 +583,7 @@
       var amount_check = order_amount.localeCompare(qr_amount);
 
       if (material_name_check !== 0) non_match.push("Material Label");
-      //if (material_id_check !== 0) non_match.push("Material Id");
+      if (material_id_check !== 0) non_match.push("Material Id");
       //if (amount_check !== 0) non_match.push("Amount");
 
       if (non_match.length !== 0) {
@@ -881,7 +884,13 @@
   }
 
   function compare_weights(){
-    var formula_weight = $("#amount-hidden").text();
+    var order_amount = ($(".modal-body .material-amount").text()).trim();
+    if (isEmptyOrSpaces(order_amount)){
+      var current_row = $("#row-number-hide").val();
+      var form_amount_class = '.value-'+current_row+"2";
+      var order_amount = ($(form_amount_class).text()).trim();
+    }
+    var formula_weight = order_amount;
     var produced_amount = $("#produced-amount-hide").val();
     var required_weight = parseFloat(formula_weight) * parseFloat(produced_amount);
     var scale_weight = $("#hide-weight").val();
